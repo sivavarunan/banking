@@ -1,5 +1,6 @@
 import { formatAmount } from '@/lib/utils'
 import React from 'react'
+import AnimatedCounter from './AnimatedCounter'
 
 const TotalBalanceBox = ({accounts = [],totalBanks, totalCurrentBalance}:TotlaBalanceBoxProps) => {
   return (
@@ -15,7 +16,9 @@ const TotalBalanceBox = ({accounts = [],totalBanks, totalCurrentBalance}:TotlaBa
                     Total current balance
                 </p>
                 <p className='total-balance-amount flex-center gap-2'>
-                    {formatAmount(totalCurrentBalance)}
+                    <AnimatedCounter
+                    amount={totalCurrentBalance}
+                    /> 
                 </p>
             </div>
         </div>
