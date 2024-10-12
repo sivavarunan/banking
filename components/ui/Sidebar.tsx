@@ -45,7 +45,9 @@ pathName === item.route || pathName.startsWith(`${item.route}/`)
                     </Link>
             )
         })}
+        USER
       </nav>
+      FOOTER
     </section>
   );
 };
