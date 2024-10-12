@@ -5,7 +5,7 @@ import React from 'react'
 
 const Home = () => {
 
-    const loggedIn = { firstname: 'Siva' }
+    const loggedIn = { firstName: 'Siva' }
 
     return (
         <section className='home'>
@@ -14,7 +14,7 @@ const Home = () => {
                     <HeaderBox
                         type="greeting"
                         title="Welcome"
-                        user={loggedIn?.firstname || 'Guest'}
+                        user={loggedIn?.firstName || 'Guest'}
                         subtext="Access and manage your transection efficienty"
                     />
                     <TotalBalanceBox
