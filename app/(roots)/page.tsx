@@ -5,7 +5,7 @@ import React from 'react'
 
 const Home = () => {
 
-    const loggedIn = { firstName: 'Siva' }
+    const loggedIn = { firstName: 'Siva', lastName:'Varunan' }
 
     return (
         <section className='home'>
@@ -37,4 +37,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Home;
