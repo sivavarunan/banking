@@ -29,9 +29,17 @@ const AuthForm = ({type}:{type: String}) => {
                             {user ? 'Link your Account to get started'
                             : 'Please enter your details'}
                         </p>
-
                     </div>
         </header>
+        {user ? (
+            <div className='flex flex-col gap-4'>
+                {/* plaidlink */}
+            </div>
+        ):(
+            <>
+            FORM
+            </>
+        )}
     </section>
   )
 }
