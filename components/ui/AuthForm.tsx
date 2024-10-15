@@ -21,13 +21,15 @@ import { authFormSchema } from '@/lib/utils'
 import { Loader2, Truck } from 'lucide-react'
 
 
-const AuthForm = ({ type }: { type: String }) => {
+const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(false);
 
+    const formSchema = authFormSchema(type);
+
     // 1. Define your form.
-    const form = useForm<z.infer<typeof authFormSchema>>({
-        resolver: zodResolver(authFormSchema),
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             email: "",
             password: '',
@@ -35,7 +37,7 @@ const AuthForm = ({ type }: { type: String }) => {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof authFormSchema>) {
+    function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         setIsLoading(true)
@@ -92,7 +94,7 @@ const AuthForm = ({ type }: { type: String }) => {
                             />
                             <CustomInput
                             control={form.control}
-                            name='address'
+                            name='address1'
                             label='Address'
                             placeholder='Enter your specific address'
                             />
@@ -110,15 +112,21 @@ const AuthForm = ({ type }: { type: String }) => {
                             />
                              <CustomInput
                             control={form.control}
-                            name='potalCode'
+                            name='postalCode'
                             label='Postal Code'
                             placeholder='example: 12345'
                             />
-                                <CustomInput
+                            <CustomInput
                             control={form.control}
                             name='dateOfBirth'
                             label='Date of Birth'
                             placeholder='dd/mm/yyyy'
+                            />
+                            <CustomInput
+                            control={form.control}
+                            name='ssn'
+                            label='SSN'
+                            placeholder='example: 1234'
                             />
                             </>
                         ) }
@@ -136,6 +144,7 @@ const AuthForm = ({ type }: { type: String }) => {
                             label='Password'
                             placeholder='Enter your Password'
                         />
+                        
                         <div className='flex flex-col w-full gap-4'>
                             <Button type="submit" className='form-btn' disabled={isLoading}>{isLoading ? (
                             <>
