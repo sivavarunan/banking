@@ -15,7 +15,7 @@ import { authFormSchema } from '@/lib/utils'
 
 interface CustomInput {
     control: Control<z.infer<typeof authFormSchema>>,
-    name: 'email' |'password' ;
+    name: FieldPath<z.infer<typeof authFormSchema>> ;
     label: string;
     placeholder: string;
   }
@@ -34,7 +34,7 @@ const CustomInput = ({control , name, label, placeholder }:CustomInput ) => {
                         <FormControl>
                             <Input placeholder={placeholder}
                                 className='input-class'
-                                type='password'
+                                type={name === 'password' ? 'password' : 'text'}
                                 {...field}
                             />
                         </FormControl>
