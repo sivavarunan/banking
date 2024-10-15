@@ -76,6 +76,52 @@ const AuthForm = ({ type }: { type: String }) => {
             ) : (
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        {type === 'sign-Up' && (
+                            <>
+                            <CustomInput
+                            control={form.control}
+                            name='firstName'
+                            label='First Name'
+                            placeholder='Enter your firstname'
+                            />
+                            <CustomInput
+                            control={form.control}
+                            name='lastName'
+                            label='Last Name'
+                            placeholder='Enter your lastname'
+                            />
+                            <CustomInput
+                            control={form.control}
+                            name='address'
+                            label='Address'
+                            placeholder='Enter your specific address'
+                            />
+                            <CustomInput
+                            control={form.control}
+                            name='state'
+                            label='State'
+                            placeholder='Enter your specific State'
+                            />
+                            <CustomInput
+                            control={form.control}
+                            name='state'
+                            label='State'
+                            placeholder='example: SF'
+                            />
+                             <CustomInput
+                            control={form.control}
+                            name='potalCode'
+                            label='Postal Code'
+                            placeholder='example: 12345'
+                            />
+                                <CustomInput
+                            control={form.control}
+                            name='dateOfBirth'
+                            label='Date of Birth'
+                            placeholder='dd/mm/yyyy'
+                            />
+                            </>
+                        ) }
 
                         <CustomInput
                             control={form.control}
@@ -96,7 +142,7 @@ const AuthForm = ({ type }: { type: String }) => {
                             <Loader2 size={20} className='animate-spin' /> &nbsp; 
                             Loading... 
                             
-                            </> ) : type === 'sign in' ? 'Sign In' : 'Sign Up'
+                            </> ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'
 
                         }</Button>
                         </div>
