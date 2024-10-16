@@ -5,9 +5,12 @@ import { createAdminClient, createSessionClient } from "../appWrite";
 import { ID } from "node-appwrite";
 import { parseStringify } from "../utils";
 
-export const signIn = () => {
+export const signIn = async ({email, password}:signInProps) => {
     try {
+        const { account } = await createAdminClient();
 
+        const response = await account.createEmailPasswordSession(email, password);
+        return parseStringify(response);
     } catch (error) {
         console.error('Error', error)
     }
