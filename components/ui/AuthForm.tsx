@@ -21,7 +21,7 @@ import { authFormSchema } from '@/lib/utils'
 import { Loader2, Truck } from 'lucide-react'
 import SignUp from '@/app/(auth)/sign-up/page'
 import { useRouter } from 'next/navigation'
-import { signUp, signIn } from '@/lib/actions/user.actions'
+import { signUp, signIn, getLoggedInUser } from '@/lib/actions/user.actions'
 
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -29,6 +29,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(false);
+
 
     const formSchema = authFormSchema(type);
 
