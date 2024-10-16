@@ -47,14 +47,15 @@ const AuthForm = ({ type }: { type: string }) => {
         try {
             if(type === 'sign-Up'){
               const newUser = await signUp(data);
+              setUser(newUser);
             }
             if(type === 'sign-in'){
-                const response = await signIn({
-                    email : data.email,
-                    password : data.password,
-                })
+                // const response = await signIn({
+                //     email : data.email,
+                //     password : data.password,
+                // })
 
-                if(response)router.push('/')
+                // if(response)router.push('/')
             }
 
         console.log(data)
@@ -97,6 +98,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     {/* plaidlink */}
                 </div>
             ) : (
+                <>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         {type === 'sign-Up' && (
@@ -185,8 +187,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         </div>
                     </form>
                 </Form>
-            )}
-            <footer className='flex justify-center gap-1'>
+                 <footer className='flex justify-center gap-1'>
                 <p className='text-14 font-normal text-gray-600'>{type === 'sign in' ? "Don't have an account?"
                     : "Alredy have an account?"}
 
@@ -195,6 +196,9 @@ const AuthForm = ({ type }: { type: string }) => {
                     {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
                 </Link>
             </footer>
+            </>
+            )}
+           
         </section>
     )
 
