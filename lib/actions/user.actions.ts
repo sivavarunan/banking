@@ -1,9 +1,10 @@
 'use server';
 
 import { cookies } from "next/headers";
-import { createAdminClient, createSessionClient } from "../appWrite";
+import { createAdminClient, createSessionClient } from "../appwrite";
 import { ID } from "node-appwrite";
 import { parseStringify } from "../utils";
+import { Trykker } from "next/font/google";
 
 export const signIn = async ({email, password}:signInProps) => {
     try {
@@ -50,6 +51,17 @@ export async function getLoggedInUser() {
         const user =  await account.get();
         return parseStringify(user);
     } catch (error) {
+        return null;
+    }
+}
+
+export const logoutAccount = async () => {
+    try{
+        const { account } = await createSessionClient();
+        cookies().delete('appwrite-session');
+
+        await account.deleteSession('current');
+    }catch (error){
         return null;
     }
 }
