@@ -4,6 +4,10 @@ import { Client, Account, Databases, Users } from "node-appwrite";
 import { cookies } from "next/headers";
 
 export async function createSessionClient() {
+  console.log("Appwrite Endpoint:", process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT);
+  console.log("Appwrite Project:", process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
+  console.log("Appwrite key:", process.env.NEXT_APPWRITE_KEY);
+
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
@@ -13,7 +17,6 @@ export async function createSessionClient() {
   if (!session || !session.value) {
     throw new Error("No session");
   }
-
   client.setSession(session.value);
 
   return {
@@ -23,7 +26,9 @@ export async function createSessionClient() {
   };
 }
 
+
 export async function createAdminClient() {
+
   const client = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!)

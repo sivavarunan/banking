@@ -4,13 +4,19 @@ import { cookies } from "next/headers";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { ID } from "node-appwrite";
 import { parseStringify } from "../utils";
-import { Trykker } from "next/font/google";
+
 
 export const signIn = async ({email, password}:signInProps) => {
     try {
         const { account } = await createAdminClient();
 
         const response = await account.createEmailPasswordSession(email, password);
+        cookies().set("appwrite-session", response.secret, {
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+          });
         return parseStringify(response);
     } catch (error) {
         console.error('Error', error)
@@ -52,6 +58,7 @@ export async function getLoggedInUser() {
         return parseStringify(user);
         
     } catch (error) {
+        console.error('Error', error)
         return null;
     }
 }
