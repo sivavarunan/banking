@@ -11,12 +11,14 @@ export const signIn = async ({email, password}:signInProps) => {
         const { account } = await createAdminClient();
 
         const response = await account.createEmailPasswordSession(email, password);
+
         cookies().set("appwrite-session", response.secret, {
             path: "/",
             httpOnly: true,
             sameSite: "strict",
             secure: true,
           });
+          
         return parseStringify(response);
     } catch (error) {
         console.error('Error', error)
