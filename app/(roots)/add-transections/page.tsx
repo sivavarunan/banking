@@ -1,5 +1,7 @@
 'use client'
+
 import HeaderBox from "@/components/ui/HeaderBox";
+import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 
 const AddTransaction = () => {
@@ -37,12 +39,12 @@ const AddTransaction = () => {
             />
               </header>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5 mt-10">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Transaction Name
               </label>
-              <input
+              <Input
                 type="text"
                 name="name"
                 value={transaction.name}
@@ -56,7 +58,7 @@ const AddTransaction = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Amount
               </label>
-              <input
+              <Input
                 type="number"
                 name="amount"
                 value={transaction.amount}
@@ -70,7 +72,7 @@ const AddTransaction = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Date
               </label>
-              <input
+              <Input
                 type="date"
                 name="date"
                 value={transaction.date}
