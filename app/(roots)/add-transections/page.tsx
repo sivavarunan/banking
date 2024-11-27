@@ -34,7 +34,7 @@ const AddTransaction = () => {
         <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
           <header className='home-header'>
             <HeaderBox
-              type="greeting"
+              type="title"
               title="Add Transections"
               subtext="Add your transection efficienty"
             />
