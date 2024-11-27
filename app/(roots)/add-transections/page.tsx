@@ -2,6 +2,7 @@
 
 import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
 
 const AddTransaction = () => {
@@ -27,7 +28,7 @@ const AddTransaction = () => {
   };
 
   return (
-    <section className="home">
+  
       <div className="home-content">
         <div className="h-full w-full justify-center items-center">
           <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
@@ -41,9 +42,9 @@ const AddTransaction = () => {
           </div>
           <form onSubmit={handleSubmit} className="space-y-5 mt-10">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1">
                 Transaction Name
-              </label>
+              </Label>
               <Input
                 type="text"
                 name="name"
@@ -55,9 +56,9 @@ const AddTransaction = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1">
                 Amount
-              </label>
+              </Label>
               <Input
                 type="number"
                 name="amount"
@@ -69,9 +70,9 @@ const AddTransaction = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1">
                 Date
-              </label>
+              </Label>
               <Input
                 type="date"
                 name="date"
@@ -82,9 +83,9 @@ const AddTransaction = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1">
                 Category
-              </label>
+              </Label>
               <select
                 name="category"
                 value={transaction.category}
@@ -109,7 +110,6 @@ const AddTransaction = () => {
           </form>
         </div>
       </div>
-    </section>
   );
 };
 
