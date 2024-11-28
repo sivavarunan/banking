@@ -1,9 +1,10 @@
-'use client'
+"use client";
 
 import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
+import { addTransaction } from "@/lib/actions/addTransaction";
 
 const AddTransaction = () => {
   const [transaction, setTransaction] = useState({
@@ -13,6 +14,9 @@ const AddTransaction = () => {
     category: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setTransaction((prev) => ({
@@ -21,22 +25,43 @@ const AddTransaction = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Transaction Added:", transaction);
-    setTransaction({ name: "", amount: "", date: "", category: "" });
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Prepare data to match the backend schema
+      const transactionData = {
+        amount: parseFloat(transaction.amount),
+        description: transaction.name,
+        type: transaction.category,
+      };
+
+      // Call the addTransaction function
+      const response = await addTransaction(transactionData);
+      console.log("Transaction added successfully:", response);
+
+      // Reset the form
+      setTransaction({ name: "", amount: "", date: "", category: "" });
+    } catch (err: any) {
+      console.error("Failed to add transaction:", err);
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-
     <div className="home-content">
       <div className="h-full w-full justify-center items-center">
         <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
-          <header className='home-header'>
+          <header className="home-header">
             <HeaderBox
               type="title"
-              title="Add Transections"
-              subtext="Add your transection efficienty"
+              title="Add Transactions"
+              subtext="Add your transaction efficiently"
             />
           </header>
         </div>
@@ -101,11 +126,17 @@ const AddTransaction = () => {
               <option value="Savings">Savings</option>
             </select>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm mt-2">
+              {error}
+            </p>
+          )}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+            disabled={loading}
           >
-            Add Transaction
+            {loading ? "Adding..." : "Add Transaction"}
           </button>
         </form>
       </div>
