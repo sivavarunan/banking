@@ -26,36 +26,32 @@ const AddTransaction = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
     setError(null);
-
+  
     try {
-      const response = await fetch("/api/add-transaction", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch('/api/add-transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(transaction),
       });
-
+  
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to add transaction");
+        throw new Error(`Error: ${response.status}`);
       }
-
-      const data = await response.json();
-      console.log("Transaction added successfully:", data);
-
-      // Reset the form
-      setTransaction({ name: "", amount: "", date: "", category: "" });
+  
+      const data = await response.json(); 
+      console.log('Transaction added successfully:', data);
+  
+      setTransaction({ name: '', amount: '', date: '', category: '' }); 
     } catch (err: any) {
-      console.error("Error submitting transaction:", err.message);
-      setError(err.message || "An unexpected error occurred.");
+      console.error('Error submitting transaction:', err.message);
+      setError(err.message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="home-content">
