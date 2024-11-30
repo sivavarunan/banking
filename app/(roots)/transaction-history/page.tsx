@@ -25,43 +25,78 @@ const TransactionHistory: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await fetch('/api/fetch-transactions');
-        if (!response.ok) throw new Error("Failed to fetch transactions");
-
-        const data: TransactionAPIResponse = await response.json();
-        setTransactions(
-          data.transactions.map((transaction) => ({
-            id: transaction.$id,
-            name: transaction.name,
-            amount: transaction.amount,
-            date: transaction.date,
-            category: transaction.category,
-          }))
-        );
-      } catch (err: any) {
-        setError(err.message || "An error occurred");
-      } finally {
-        setLoading(false);
-      }
+  const formatDate = (date: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true, // For AM/PM
     };
+    return new Date(date).toLocaleString("en-US", options);
+  };
 
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch('/api/fetch-transactions');
+      if (!response.ok) throw new Error("Failed to fetch transactions");
+
+      const data: TransactionAPIResponse = await response.json();
+      setTransactions(
+        data.transactions.map((transaction) => ({
+          id: transaction.$id,
+          name: transaction.name,
+          amount: transaction.amount,
+          date: formatDate(transaction.date), // Format the date
+          category: transaction.category,
+        }))
+      );
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteTransaction = async (id: string) => {
+    try {
+      const response = await fetch(`/api/fetch-transactions?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete transaction");
+
+      setTransactions((prev) => prev.filter((transaction) => transaction.id !== id));
+    } catch (err: any) {
+      setError(err.message || "Failed to delete transaction");
+    }
+  };
+
+  const editTransaction = async (id: string, updatedData: Partial<Transaction>) => {
+    try {
+      const response = await fetch(`/api/fetch-transactions`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, data: updatedData }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update transaction");
+
+      setTransactions((prev) =>
+        prev.map((transaction) =>
+          transaction.id === id ? { ...transaction, ...updatedData } : transaction
+        )
+      );
+    } catch (err: any) {
+      setError(err.message || "Failed to update transaction");
+    }
+  };
+
+  useEffect(() => {
     fetchTransactions();
   }, []);
-
-  const formatDate = (isoDate: string): string => {
-    const date = new Date(isoDate);
-    return new Intl.DateTimeFormat("en-US", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    }).format(date);
-  };
 
   if (loading) {
     return <p className="text-center text-gray-600">Loading...</p>;
@@ -85,6 +120,7 @@ const TransactionHistory: React.FC = () => {
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Amount</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Date</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Category</th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -102,10 +138,22 @@ const TransactionHistory: React.FC = () => {
                       ? `+ $${transaction.amount}`
                       : `- $${transaction.amount}`}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-600">
-                    {formatDate(transaction.date)}
-                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-600">{transaction.date}</td>
                   <td className="px-4 py-2 text-sm text-gray-600">{transaction.category}</td>
+                  <td className="px-4 py-2 text-sm">
+                    <button
+                      className="text-blue-600 hover:underline"
+                      onClick={() => editTransaction(transaction.id, { name: "Updated Name" })}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="text-red-600 hover:underline ml-2"
+                      onClick={() => deleteTransaction(transaction.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
