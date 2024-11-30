@@ -4,7 +4,6 @@ import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import { addTransaction } from "@/lib/actions/addTransaction";
 
 const AddTransaction = () => {
   const [transaction, setTransaction] = useState({
@@ -32,21 +31,26 @@ const AddTransaction = () => {
     setError(null);
 
     try {
-      // Prepare data to match the backend schema
-      const transactionData = {
-        amount: parseFloat(transaction.amount),
-        description: transaction.name,
-        type: transaction.category,
-      };
+      const response = await fetch("/api/add-transaction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transaction),
+      });
 
-      // Call the addTransaction function
-      const response = await addTransaction(transactionData);
-      console.log("Transaction added successfully:", response);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to add transaction");
+      }
+
+      const data = await response.json();
+      console.log("Transaction added successfully:", data);
 
       // Reset the form
       setTransaction({ name: "", amount: "", date: "", category: "" });
     } catch (err: any) {
-      console.error("Failed to add transaction:", err);
+      console.error("Error submitting transaction:", err.message);
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);

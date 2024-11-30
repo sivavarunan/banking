@@ -1,31 +1,40 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { createSessionClient } from "@/lib/appwrite";
 
-export async function addTransaction(transactionData: any) {
-  const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
-  const collectionId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID;
+const DATABASE_ID = process.env.APPWRITE_DATABASE_ID!;
+const COLLECTION_ID = process.env.APPWRITE_TRANSACTION_COLLECTION_ID!;
 
-  const { database } = await createSessionClient();
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    try {
+      console.log("Adding transactions...");
+      console.log(`DATABASE_ID: ${DATABASE_ID}`);
+      console.log(`COLLECTION_ID: ${COLLECTION_ID}`);
 
-  console.log("Environment Variables in addTransaction:", {
-    databaseId,
-    collectionId,
-    transactionData,
-  });
+      const { database } = await createSessionClient();
+      const { name, amount, date, category } = req.body;
 
-  if (!databaseId || !collectionId) {
-    throw new Error("Database ID or Collection ID is missing in environment variables.");
-  }
+      // Validate fields
+      if (!name || !amount || !date || !category) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
 
-  try {
-    const response = await database.createDocument(
-      databaseId,
-      collectionId,
-      "unique()",
-      transactionData
-    );
-    return response;
-  } catch (error) {
-    console.error("Error adding transaction:", error);
-    throw new Error("Failed to add transaction");
+      // Add transaction to Appwrite database
+      const response = await database.createDocument(
+        DATABASE_ID,
+        COLLECTION_ID,
+        'unique()', // Auto-generate document ID
+        { name, amount, date, category } // Document data
+      );
+
+      // Respond with success
+      res.status(201).json({ message: 'Transaction added successfully', transaction: response });
+    } catch (error) {
+      console.error('Error adding transaction:', error);
+      res.status(500).json({ error: 'Failed to add transaction' });
+    }
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
