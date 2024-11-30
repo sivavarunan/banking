@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
+import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
 
 interface Transaction {
   id: string;
@@ -212,23 +213,23 @@ const TransactionHistory: React.FC = () => {
                     {editing === transaction.id ? (
                       <button
                         onClick={saveEditedTransaction}
-                        className="text-green-600 hover:underline"
+                        className="text-green-600 hover:underline mr-4"
                       >
-                        Save
+                        <SaveIcon/>
                       </button>
                     ) : (
                       <button
-                        className="text-blue-600 hover:underline"
+                        className="text-blue-600 hover:underline mr-4 "
                         onClick={() => editTransaction(transaction.id)}
                       >
-                        Edit
+                        <PenBoxIcon/>
                       </button>
                     )}
                     <button
-                      className="text-red-600 hover:underline ml-2"
+                      className="text-red-600 hover:underline "
                       onClick={() => deleteTransaction(transaction.id)}
                     >
-                      Delete
+                      <Trash2Icon/>
                     </button>
                   </td>
                 </tr>
