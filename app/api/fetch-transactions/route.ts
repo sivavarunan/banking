@@ -58,21 +58,31 @@ export async function DELETE(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { id, data } = await req.json();
+    const { id, data } = await req.json(); // Destructure the id and data from the request body
 
+    // Validate the required fields
     if (!id || !data) {
-      return NextResponse.json({ error: "Transaction ID and data are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing id or data" },
+        { status: 400 }
+      );
     }
 
     const { database } = await createSessionClient();
 
-    await database.updateDocument(DATABASE_ID, COLLECTION_ID, id, data);
+    // Update the document using the $id of the document
+    const response = await database.updateDocument(
+      DATABASE_ID,
+      COLLECTION_ID,
+      id, // The document $id
+      data // The fields to update (name, amount, category, date)
+    );
 
-    return NextResponse.json({ message: "Transaction updated successfully" });
+    return NextResponse.json({ updatedTransaction: response });
   } catch (error: any) {
     console.error("Error updating transaction:", error);
     return NextResponse.json(
-      { error: `Failed to update transaction: ${error.message || "Unknown error"}` },
+      { error: error.message || "Failed to update transaction" },
       { status: 500 }
     );
   }

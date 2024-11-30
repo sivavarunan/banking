@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/ui/HeaderBox";
+import { Input } from "@/components/ui/input";
 
 interface Transaction {
   id: string;
@@ -24,6 +25,8 @@ const TransactionHistory: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null); // Track the transaction being edited
+  const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
 
   const formatDate = (date: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -74,25 +77,52 @@ const TransactionHistory: React.FC = () => {
     }
   };
 
-  const editTransaction = async (id: string, updatedData: Partial<Transaction>) => {
+  const editTransaction = (id: string) => {
+    const transaction = transactions.find((t) => t.id === id);
+    if (transaction) {
+      setEditedTransaction({ ...transaction, date: new Date().toISOString() }); // Set current date for edited transaction
+      setEditing(id); // Set the ID of the transaction being edited
+    }
+  };
+
+  const saveEditedTransaction = async () => {
+    if (!editedTransaction.name || !editedTransaction.amount || !editedTransaction.category) {
+      setError("All fields are required.");
+      return;
+    }
+  
     try {
-      const response = await fetch(`/api/fetch-transactions`, {
+      // Ensure the date is either the edited date or use the current date
+      const updatedTransaction = {
+        name: editedTransaction.name,
+        amount: editedTransaction.amount,
+        category: editedTransaction.category,
+        date: editedTransaction.date || new Date().toISOString(), // Use current date if editing date
+      };
+  
+      const response = await fetch('/api/fetch-transactions', {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, data: updatedData }),
+        body: JSON.stringify({
+          $id: editing, // Pass the transaction ID (use the editing state)
+          data: updatedTransaction, // Send updated data
+        }),
       });
-
+  
       if (!response.ok) throw new Error("Failed to update transaction");
-
+  
+      // Update the transaction in state
       setTransactions((prev) =>
         prev.map((transaction) =>
-          transaction.id === id ? { ...transaction, ...updatedData } : transaction
+          transaction.id === editing ? { ...transaction, ...editedTransaction } : transaction
         )
       );
+      setEditing(null); // Stop editing
     } catch (err: any) {
       setError(err.message || "Failed to update transaction");
     }
   };
+  
 
   useEffect(() => {
     fetchTransactions();
@@ -126,27 +156,74 @@ const TransactionHistory: React.FC = () => {
             <tbody>
               {transactions.map((transaction) => (
                 <tr key={transaction.id} className="border-b last:border-b-0">
-                  <td className="px-4 py-2 text-sm text-gray-800">{transaction.name}</td>
-                  <td
-                    className={`px-4 py-2 text-sm ${
-                      transaction.category.toLowerCase() === "income"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {transaction.category.toLowerCase() === "income"
-                      ? `+ $${transaction.amount}`
-                      : `- $${transaction.amount}`}
+                  <td className="px-4 py-2 text-sm text-gray-800">
+                    {editing === transaction.id ? (
+                      <Input
+                        type="text"
+                        value={editedTransaction.name || transaction.name}
+                        onChange={(e) => setEditedTransaction({ ...editedTransaction, name: e.target.value })}
+                        className="border p-1 rounded"
+                      />
+                    ) : (
+                      transaction.name
+                    )}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-600">{transaction.date}</td>
-                  <td className="px-4 py-2 text-sm text-gray-600">{transaction.category}</td>
+                  <td className={`px-4 py-2 text-sm ${transaction.category.toLowerCase() === "income" ? "text-green-600" : "text-red-600"}`}>
+                    {editing === transaction.id ? (
+                      <Input
+                        type="number"
+                        value={editedTransaction.amount || transaction.amount}
+                        onChange={(e) => setEditedTransaction({ ...editedTransaction, amount: +e.target.value })}
+                        className="border p-1 rounded"
+                      />
+                    ) : (
+                      transaction.category.toLowerCase() === "income"
+                        ? `+ $${transaction.amount}`
+                        : `- $${Math.abs(transaction.amount)}`
+                    )}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-600">
+                    {editing === transaction.id ? (
+                      <Input
+                        type="text"
+                        value={editedTransaction.date || formatDate(transaction.date)}
+                        disabled
+                        className="border p-1 rounded"
+                      />
+                    ) : (
+                      transaction.date
+                    )}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-600">
+                    {editing === transaction.id ? (
+                      <select
+                        value={editedTransaction.category || transaction.category}
+                        onChange={(e) => setEditedTransaction({ ...editedTransaction, category: e.target.value })}
+                        className="border p-1 rounded"
+                      >
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                      </select>
+                    ) : (
+                      transaction.category
+                    )}
+                  </td>
                   <td className="px-4 py-2 text-sm">
-                    <button
-                      className="text-blue-600 hover:underline"
-                      onClick={() => editTransaction(transaction.id, { name: "Updated Name" })}
-                    >
-                      Edit
-                    </button>
+                    {editing === transaction.id ? (
+                      <button
+                        onClick={saveEditedTransaction}
+                        className="text-green-600 hover:underline"
+                      >
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        className="text-blue-600 hover:underline"
+                        onClick={() => editTransaction(transaction.id)}
+                      >
+                        Edit
+                      </button>
+                    )}
                     <button
                       className="text-red-600 hover:underline ml-2"
                       onClick={() => deleteTransaction(transaction.id)}
