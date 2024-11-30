@@ -123,7 +123,6 @@ const AddTransaction = () => {
               </option>
               <option value="Income">Income</option>
               <option value="Expense">Expense</option>
-              <option value="Savings">Savings</option>
             </select>
           </div>
           {error && (

@@ -51,6 +51,18 @@ const TransactionHistory: React.FC = () => {
     fetchTransactions();
   }, []);
 
+  const formatDate = (isoDate: string): string => {
+    const date = new Date(isoDate);
+    return new Intl.DateTimeFormat("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
+  };
+
   if (loading) {
     return <p className="text-center text-gray-600">Loading...</p>;
   }
@@ -81,14 +93,18 @@ const TransactionHistory: React.FC = () => {
                   <td className="px-4 py-2 text-sm text-gray-800">{transaction.name}</td>
                   <td
                     className={`px-4 py-2 text-sm ${
-                      transaction.amount > 0 ? "text-green-600" : "text-red-600"
+                      transaction.category.toLowerCase() === "income"
+                        ? "text-green-600"
+                        : "text-red-600"
                     }`}
                   >
-                    {transaction.amount > 0
+                    {transaction.category.toLowerCase() === "income"
                       ? `+ $${transaction.amount}`
-                      : `- $${Math.abs(transaction.amount)}`}
+                      : `- $${transaction.amount}`}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-600">{transaction.date}</td>
+                  <td className="px-4 py-2 text-sm text-gray-600">
+                    {formatDate(transaction.date)}
+                  </td>
                   <td className="px-4 py-2 text-sm text-gray-600">{transaction.category}</td>
                 </tr>
               ))}
