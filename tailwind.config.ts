@@ -88,6 +88,10 @@ const config = {
         "ibm-plex-serif": "var(--font-ibm-plex-serif)",
       },
       keyframes: {
+        'progress-bar': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -98,6 +102,7 @@ const config = {
         },
       },
       animation: {
+        'progress-bar': 'progress-bar 1.5s ease-in-out infinite',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
