@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
 import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
+import Loading from "@/components/ui/loading";
 
 interface Transaction {
   id: string;
@@ -130,7 +131,7 @@ const TransactionHistory: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center text-gray-600">Loading...</p>;
+    return <p className="text-center text-gray-600"><Loading/></p>;
   }
 
   if (error) {
