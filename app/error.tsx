@@ -3,7 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const Error = ({ error, reset }: { error: Error; reset: () => void }) => {
+interface ErrorProps {
+  error: Error;
+  reset: () => void;
+}
+
+const Error = ({ error, reset }: ErrorProps) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -17,14 +22,12 @@ const Error = ({ error, reset }: { error: Error; reset: () => void }) => {
         We encountered an unexpected error. Please try again or contact support if the problem persists.
       </p>
       <div className="mt-6 space-x-4">
-        {/* Retry Button */}
         <button
           onClick={reset}
           className="px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
         >
           Retry
         </button>
-        {/* Home Button */}
         <button
           onClick={() => router.push('/')}
           className="px-6 py-2 text-blue-500 border border-blue-500 rounded-md hover:bg-blue-100"

@@ -1,11 +1,11 @@
 'use client';
-
 import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
 import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
 import Loading from "@/components/ui/loading";
-import Error from "@/app/error";
+import { useRouter } from "next/navigation";
+import Error from "../../error"; // Import the Error component
 
 interface Transaction {
   id: string;
@@ -32,6 +32,8 @@ const TransactionHistory: React.FC = () => {
   const [editing, setEditing] = useState<string | null>(null); // Track the transaction being edited
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
 
+  const router = useRouter();
+
   const formatDate = (date: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -46,8 +48,6 @@ const TransactionHistory: React.FC = () => {
   };
 
   const fetchTransactions = async () => {
-    setLoading(true);
-    setError(null);
     try {
       const response = await fetch('/api/fetch-transactions');
       if (!response.ok) throw new Error("Failed to fetch transactions");
@@ -63,7 +63,7 @@ const TransactionHistory: React.FC = () => {
         }))
       );
     } catch (err: any) {
-      setError(err.message || "An error occurred while fetching transactions.");
+      setError(err.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -96,15 +96,16 @@ const TransactionHistory: React.FC = () => {
       setError("All fields are required.");
       return;
     }
-  
+
     try {
+      // Ensure the date is either the edited date or use the current date
       const updatedTransaction = {
         name: editedTransaction.name,
         amount: editedTransaction.amount,
         category: editedTransaction.category,
-        date: editedTransaction.date || new Date().toISOString(),
+        date: editedTransaction.date || new Date().toISOString(), // Use current date if editing date
       };
-  
+
       const response = await fetch('/api/fetch-transactions', {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -113,9 +114,10 @@ const TransactionHistory: React.FC = () => {
           data: updatedTransaction, // Send updated data
         }),
       });
-  
+
       if (!response.ok) throw new Error("Failed to update transaction");
-  
+
+      // Update the transaction in state
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing ? { ...transaction, ...editedTransaction } : transaction
@@ -127,6 +129,12 @@ const TransactionHistory: React.FC = () => {
     }
   };
 
+  const retryFetchTransactions = () => {
+    setLoading(true);
+    setError(null);
+    fetchTransactions();
+  };
+
   useEffect(() => {
     fetchTransactions();
   }, []);
@@ -136,8 +144,9 @@ const TransactionHistory: React.FC = () => {
   }
 
   if (error) {
-    return <Error message={error} onRetry={fetchTransactions} />;
+    return <Error error={error} reset={retryFetchTransactions} />;
   }
+  
 
   return (
     <div className="home-content">
