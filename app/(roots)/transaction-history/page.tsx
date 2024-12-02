@@ -1,9 +1,11 @@
 'use client';
+
 import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
 import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
 import Loading from "@/components/ui/loading";
+import Error from "@/app/error";
 
 interface Transaction {
   id: string;
@@ -44,6 +46,8 @@ const TransactionHistory: React.FC = () => {
   };
 
   const fetchTransactions = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/fetch-transactions');
       if (!response.ok) throw new Error("Failed to fetch transactions");
@@ -59,7 +63,7 @@ const TransactionHistory: React.FC = () => {
         }))
       );
     } catch (err: any) {
-      setError(err.message || "An error occurred");
+      setError(err.message || "An error occurred while fetching transactions.");
     } finally {
       setLoading(false);
     }
@@ -94,12 +98,11 @@ const TransactionHistory: React.FC = () => {
     }
   
     try {
-      // Ensure the date is either the edited date or use the current date
       const updatedTransaction = {
         name: editedTransaction.name,
         amount: editedTransaction.amount,
         category: editedTransaction.category,
-        date: editedTransaction.date || new Date().toISOString(), // Use current date if editing date
+        date: editedTransaction.date || new Date().toISOString(),
       };
   
       const response = await fetch('/api/fetch-transactions', {
@@ -113,7 +116,6 @@ const TransactionHistory: React.FC = () => {
   
       if (!response.ok) throw new Error("Failed to update transaction");
   
-      // Update the transaction in state
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing ? { ...transaction, ...editedTransaction } : transaction
@@ -124,18 +126,17 @@ const TransactionHistory: React.FC = () => {
       setError(err.message || "Failed to update transaction");
     }
   };
-  
 
   useEffect(() => {
     fetchTransactions();
   }, []);
 
   if (loading) {
-    return <div className="text-center text-gray-600"><Loading/> </div>;
+    return <div className="text-center text-gray-600"><Loading /> </div>;
   }
 
   if (error) {
-    return <p className="text-center text-red-500">Error: {error}</p>;
+    return <Error message={error} onRetry={fetchTransactions} />;
   }
 
   return (
@@ -216,21 +217,21 @@ const TransactionHistory: React.FC = () => {
                         onClick={saveEditedTransaction}
                         className="text-green-600 hover:underline mr-4"
                       >
-                        <SaveIcon/>
+                        <SaveIcon />
                       </button>
                     ) : (
                       <button
                         className="text-blue-600 hover:underline mr-4 "
                         onClick={() => editTransaction(transaction.id)}
                       >
-                        <PenBoxIcon/>
+                        <PenBoxIcon />
                       </button>
                     )}
                     <button
                       className="text-red-600 hover:underline "
                       onClick={() => deleteTransaction(transaction.id)}
                     >
-                      <Trash2Icon/>
+                      <Trash2Icon />
                     </button>
                   </td>
                 </tr>
