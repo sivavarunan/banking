@@ -27,6 +27,7 @@ interface TransactionAPIResponse {
 
 const TransactionHistory: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [totalTransactions, setTotalTransactions] = useState<number>(0); // Add totalTransactions state
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null); // Track the transaction being edited
@@ -62,6 +63,9 @@ const TransactionHistory: React.FC = () => {
           category: transaction.category,
         }))
       );
+
+      // Update total transactions
+      setTotalTransactions(data.transactions.length);
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {
@@ -78,11 +82,11 @@ const TransactionHistory: React.FC = () => {
       if (!response.ok) throw new Error("Failed to delete transaction");
 
       setTransactions((prev) => prev.filter((transaction) => transaction.id !== id));
+      setTotalTransactions((prev) => prev - 1); // Decrease total transactions count
     } catch (err: any) {
       setError(err.message || "Failed to delete transaction");
     }
   };
-
   const editTransaction = (id: string) => {
     const transaction = transactions.find((t) => t.id === id);
     if (transaction) {
@@ -146,7 +150,6 @@ const TransactionHistory: React.FC = () => {
   if (error) {
     return <Error error={error} reset={retryFetchTransactions} />;
   }
-  
 
   return (
     <div className="home-content">
@@ -154,6 +157,11 @@ const TransactionHistory: React.FC = () => {
         <header className="home-header">
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
         </header>
+        <div className="my-4">
+          <h2 className="text-lg font-semibold text-gray-700">
+            Total Transactions: {totalTransactions}
+          </h2>
+        </div>
         <div className="overflow-x-auto mt-10">
           <table className="min-w-full bg-white border border-gray-200 rounded-md">
             <thead>
