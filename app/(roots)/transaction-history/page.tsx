@@ -51,7 +51,7 @@ const TransactionHistory: React.FC = () => {
   const fetchTransactions = async () => {
     try {
       const response = await fetch('/api/fetch-transactions');
-      if (!response.ok) throw new Error("Failed to fetch transactions");
+      if (!response.ok) throw Error;
 
       const data: TransactionAPIResponse = await response.json();
       setTransactions(
@@ -79,7 +79,7 @@ const TransactionHistory: React.FC = () => {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Failed to delete transaction");
+      if (!response.ok) throw  Error;
 
       setTransactions((prev) => prev.filter((transaction) => transaction.id !== id));
       setTotalTransactions((prev) => prev - 1); // Decrease total transactions count
@@ -119,7 +119,7 @@ const TransactionHistory: React.FC = () => {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to update transaction");
+      if (!response.ok) throw  Error;
 
       // Update the transaction in state
       setTransactions((prev) =>

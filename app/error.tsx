@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface ErrorProps {
-  error: Error;
+  error: Error | string ;
   reset: () => void;
 }
 
@@ -12,7 +12,7 @@ const Error = ({ error, reset }: ErrorProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.error(error); // Log the error to the console for debugging
+    console.error(error); 
   }, [error]);
 
   return (
