@@ -27,10 +27,10 @@ interface TransactionAPIResponse {
 
 const TransactionHistory: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [totalTransactions, setTotalTransactions] = useState<number>(0); // Add totalTransactions state
+  const [totalTransactions, setTotalTransactions] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [editing, setEditing] = useState<string | null>(null); // Track the transaction being edited
+  const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
 
   const router = useRouter();
@@ -43,7 +43,7 @@ const TransactionHistory: React.FC = () => {
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
-      hour12: true, // For AM/PM
+      hour12: true, 
     };
     return new Date(date).toLocaleString("en-US", options);
   };
@@ -59,7 +59,7 @@ const TransactionHistory: React.FC = () => {
           id: transaction.$id,
           name: transaction.name,
           amount: transaction.amount,
-          date: formatDate(transaction.date), // Format the date
+          date: formatDate(transaction.date), 
           category: transaction.category,
         }))
       );
@@ -79,7 +79,7 @@ const TransactionHistory: React.FC = () => {
         method: "DELETE",
       });
 
-      if (!response.ok) throw  Error;
+      if (!response.ok) throw Error;
 
       setTransactions((prev) => prev.filter((transaction) => transaction.id !== id));
       setTotalTransactions((prev) => prev - 1); // Decrease total transactions count
@@ -119,7 +119,7 @@ const TransactionHistory: React.FC = () => {
         }),
       });
 
-      if (!response.ok) throw  Error;
+      if (!response.ok) throw Error;
 
       // Update the transaction in state
       setTransactions((prev) =>
