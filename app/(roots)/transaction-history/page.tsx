@@ -37,7 +37,7 @@ const TransactionHistory: React.FC = () => {
       ? sum + transaction.amount
       : sum - transaction.amount;
   }, 0);
-  
+
 
   const router = useRouter();
 
@@ -89,7 +89,7 @@ const TransactionHistory: React.FC = () => {
       if (!response.ok) throw Error;
 
       setTransactions((prev) => prev.filter((transaction) => transaction.id !== id));
-      setTotalTransactions((prev) => prev - 1); // Decrease total transactions count
+      setTotalTransactions((prev) => prev - 1); 
     } catch (err: any) {
       setError(err.message || "Failed to delete transaction");
     }
@@ -97,8 +97,8 @@ const TransactionHistory: React.FC = () => {
   const editTransaction = (id: string) => {
     const transaction = transactions.find((t) => t.id === id);
     if (transaction) {
-      setEditedTransaction({ ...transaction, date: new Date().toISOString() }); // Set current date for edited transaction
-      setEditing(id); // Set the ID of the transaction being edited
+      setEditedTransaction({ ...transaction, date: new Date().toISOString() }); 
+      setEditing(id); 
     }
   };
 
@@ -109,32 +109,30 @@ const TransactionHistory: React.FC = () => {
     }
 
     try {
-      // Ensure the date is either the edited date or use the current date
       const updatedTransaction = {
         name: editedTransaction.name,
         amount: editedTransaction.amount,
         category: editedTransaction.category,
-        date: editedTransaction.date || new Date().toISOString(), // Use current date if editing date
+        date: editedTransaction.date || new Date().toISOString(),
       };
 
       const response = await fetch('/api/fetch-transactions', {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          $id: editing, // Pass the transaction ID (use the editing state)
-          data: updatedTransaction, // Send updated data
+          $id: editing, 
+          data: updatedTransaction, 
         }),
       });
 
       if (!response.ok) throw Error;
 
-      // Update the transaction in state
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing ? { ...transaction, ...editedTransaction } : transaction
         )
       );
-      setEditing(null); // Stop editing
+      setEditing(null);
     } catch (err: any) {
       setError(err.message || "Failed to update transaction");
     }
@@ -165,16 +163,16 @@ const TransactionHistory: React.FC = () => {
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
         </header>
         <div className="my-4">
-  <h2 className="text-lg font-semibold text-gray-700">
-    Total Transactions: {totalTransactions}
-  </h2>
-  <h2 className="text-lg font-semibold text-gray-700">
-    Total Amount:
-    <span className={`${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-      {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
-    </span>
-  </h2>
-</div>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Total Transactions: {totalTransactions}
+          </h2>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Total Amount:
+            <span className={`${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
+            </span>
+          </h2>
+        </div>
 
         <div className="overflow-x-auto mt-10">
           <table className="min-w-full bg-white border border-gray-200 rounded-md">
