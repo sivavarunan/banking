@@ -59,12 +59,12 @@ const TransactionHistory: React.FC = () => {
         data.transactions.map((transaction) => ({
           id: transaction.$id,
           name: transaction.name,
-          amount: Number(transaction.amount), // Convert to number here
+          amount: Number(transaction.amount),
           date: formatDate(transaction.date),
           category: transaction.category,
         }))
       );
-      
+
 
       // Update total transactions
       setTotalTransactions(data.transactions.length);
