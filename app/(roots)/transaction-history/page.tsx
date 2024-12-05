@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
 import Loading from "@/components/ui/loading";
 import { useRouter } from "next/navigation";
-import Error from "../../error"; // Import the Error component
+import Error from "../../error";
 
 interface Transaction {
   id: string;
@@ -32,6 +32,8 @@ const TransactionHistory: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
+  const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+
 
   const router = useRouter();
 
@@ -43,7 +45,7 @@ const TransactionHistory: React.FC = () => {
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
-      hour12: true, 
+      hour12: true,
     };
     return new Date(date).toLocaleString("en-US", options);
   };
@@ -59,7 +61,7 @@ const TransactionHistory: React.FC = () => {
           id: transaction.$id,
           name: transaction.name,
           amount: transaction.amount,
-          date: formatDate(transaction.date), 
+          date: formatDate(transaction.date),
           category: transaction.category,
         }))
       );
@@ -160,6 +162,12 @@ const TransactionHistory: React.FC = () => {
         <div className="my-4">
           <h2 className="text-lg font-semibold text-gray-700">
             Total Transactions: {totalTransactions}
+          </h2>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Total Amount:
+            <span className={`${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
+            </span>
           </h2>
         </div>
         <div className="overflow-x-auto mt-10">
