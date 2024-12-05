@@ -6,6 +6,7 @@ import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
 import Loading from "@/components/ui/loading";
 import { useRouter } from "next/navigation";
 import Error from "../../error";
+import { Label } from "@/components/ui/label";
 
 interface Transaction {
   id: string;
@@ -163,15 +164,15 @@ const TransactionHistory: React.FC = () => {
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
         </header>
         <div className="my-4">
-          <h2 className="text-lg font-semibold text-gray-700">
+          <Label className="text-lg font-semibold text-gray-700">
             Total Transactions: {totalTransactions}
-          </h2>
-          <h2 className="text-lg font-semibold text-gray-700">
+          </Label>
+          <Label className="text-lg font-semibold text-gray-700 ml-10">
             Total Amount:
             <span className={`${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
             </span>
-          </h2>
+          </Label>
         </div>
 
         <div className="overflow-x-auto mt-10">
