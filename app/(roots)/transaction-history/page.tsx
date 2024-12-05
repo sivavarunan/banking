@@ -32,6 +32,8 @@ const TransactionHistory: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
+  const [totalTransactionAmount, setTotalTransactionAmount] = useState<number>(0);
+
 
   const router = useRouter();
 
@@ -52,26 +54,31 @@ const TransactionHistory: React.FC = () => {
     try {
       const response = await fetch('/api/fetch-transactions');
       if (!response.ok) throw Error;
-
+  
       const data: TransactionAPIResponse = await response.json();
-      setTransactions(
-        data.transactions.map((transaction) => ({
-          id: transaction.$id,
-          name: transaction.name,
-          amount: transaction.amount,
-          date: formatDate(transaction.date), 
-          category: transaction.category,
-        }))
+  
+      const formattedTransactions = data.transactions.map((transaction) => ({
+        id: transaction.$id,
+        name: transaction.name,
+        amount: transaction.amount,
+        date: formatDate(transaction.date),
+        category: transaction.category,
+      }));
+  
+      setTransactions(formattedTransactions);
+  
+      // Update total transactions and total amount
+      setTotalTransactions(formattedTransactions.length);
+      setTotalTransactionAmount(
+        formattedTransactions.reduce((sum, transaction) => sum + transaction.amount, 0)
       );
-
-      // Update total transactions
-      setTotalTransactions(data.transactions.length);
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {
       setLoading(false);
     }
   };
+  
 
   const deleteTransaction = async (id: string) => {
     try {
