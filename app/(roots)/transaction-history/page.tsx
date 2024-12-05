@@ -32,8 +32,7 @@ const TransactionHistory: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
-  const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
-
+  const totalAmount = transactions.reduce((sum, transaction) => sum + Number(transaction.amount), 0);
 
   const router = useRouter();
 
@@ -60,11 +59,12 @@ const TransactionHistory: React.FC = () => {
         data.transactions.map((transaction) => ({
           id: transaction.$id,
           name: transaction.name,
-          amount: transaction.amount,
+          amount: Number(transaction.amount), // Convert to number here
           date: formatDate(transaction.date),
           category: transaction.category,
         }))
       );
+      
 
       // Update total transactions
       setTotalTransactions(data.transactions.length);
