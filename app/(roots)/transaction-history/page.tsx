@@ -32,7 +32,12 @@ const TransactionHistory: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
-  const totalAmount = transactions.reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+  const totalAmount = transactions.reduce((sum, transaction) => {
+    return transaction.category.toLowerCase() === 'income'
+      ? sum + transaction.amount
+      : sum - transaction.amount;
+  }, 0);
+  
 
   const router = useRouter();
 
@@ -160,16 +165,17 @@ const TransactionHistory: React.FC = () => {
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
         </header>
         <div className="my-4">
-          <h2 className="text-lg font-semibold text-gray-700">
-            Total Transactions: {totalTransactions}
-          </h2>
-          <h2 className="text-lg font-semibold text-gray-700">
-            Total Amount:
-            <span className={`${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
-            </span>
-          </h2>
-        </div>
+  <h2 className="text-lg font-semibold text-gray-700">
+    Total Transactions: {totalTransactions}
+  </h2>
+  <h2 className="text-lg font-semibold text-gray-700">
+    Total Amount:
+    <span className={`${totalAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+      {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
+    </span>
+  </h2>
+</div>
+
         <div className="overflow-x-auto mt-10">
           <table className="min-w-full bg-white border border-gray-200 rounded-md">
             <thead>
