@@ -4,7 +4,6 @@ import HeaderBox from "@/components/ui/HeaderBox";
 import { Input } from "@/components/ui/input";
 import { Trash2Icon, PenBoxIcon, SaveIcon } from "lucide-react";
 import Loading from "@/components/ui/loading";
-import { useRouter } from "next/navigation";
 import Error from "../../error";
 import { Label } from "@/components/ui/label";
 
@@ -39,9 +38,6 @@ const TransactionHistory: React.FC = () => {
       : sum - transaction.amount;
   }, 0);
 
-
-  const router = useRouter();
-
   const formatDate = (date: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -71,8 +67,6 @@ const TransactionHistory: React.FC = () => {
         }))
       );
 
-
-      // Update total transactions
       setTotalTransactions(data.transactions.length);
     } catch (err: any) {
       setError(err.message || "An error occurred");
@@ -127,7 +121,6 @@ const TransactionHistory: React.FC = () => {
       });
 
       if (!response.ok) throw Error;
-
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing ? { ...transaction, ...editedTransaction } : transaction
@@ -144,15 +137,12 @@ const TransactionHistory: React.FC = () => {
     setError(null);
     fetchTransactions();
   };
-
   useEffect(() => {
     fetchTransactions();
   }, []);
-
   if (loading) {
     return <div className="text-center text-gray-600"><Loading /> </div>;
   }
-
   if (error) {
     return <Error error={error} reset={retryFetchTransactions} />;
   }
