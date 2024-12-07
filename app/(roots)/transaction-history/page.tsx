@@ -98,11 +98,8 @@ const TransactionHistory: React.FC = () => {
   };
 
   const saveEditedTransaction = async () => {
-    if (!editedTransaction.name || !editedTransaction.amount || !editedTransaction.category) {
-      setError("All fields are required.");
-      return;
-    }
-
+    console.log("Edited Transaction Data: ", editedTransaction);
+  
     try {
       const updatedTransaction = {
         name: editedTransaction.name,
@@ -110,7 +107,7 @@ const TransactionHistory: React.FC = () => {
         category: editedTransaction.category,
         date: editedTransaction.date || new Date().toISOString(),
       };
-
+  
       const response = await fetch('/api/fetch-transactions', {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -119,8 +116,11 @@ const TransactionHistory: React.FC = () => {
           data: updatedTransaction, 
         }),
       });
-
+  
+      console.log("API Response: ", response);
+  
       if (!response.ok) throw Error;
+  
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing ? { ...transaction, ...editedTransaction } : transaction
@@ -131,6 +131,7 @@ const TransactionHistory: React.FC = () => {
       setError(err.message || "Failed to update transaction");
     }
   };
+  
 
   const retryFetchTransactions = () => {
     setLoading(true);
