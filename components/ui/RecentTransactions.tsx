@@ -33,22 +33,34 @@ const RecentTransactions = () => {
       ) : error ? (
         <p className="text-red-500">Error: {error}</p>
       ) : transactions.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {transactions.map((transaction: any) => (
-            <div
-              key={transaction.$id}
-              className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
-            >
-              <h3 className="font-medium text-gray-800">{transaction.name}</h3>
-              <p className="text-sm text-gray-500">{transaction.category}</p>
-              <p className="text-sm text-gray-500">
-                {new Date(transaction.date).toLocaleDateString()}
-              </p>
-              <p className="text-lg font-semibold text-gray-900 mt-2">
-                ${transaction.amount}
-              </p>
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Name</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Category</th>
+                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-600">Date</th>
+                <th className="px-4 py-2 text-right text-sm font-semibold text-gray-600">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((transaction: any, index) => (
+                <tr
+                  key={transaction.$id}
+                  className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+                >
+                  <td className="px-4 py-2 text-sm text-gray-700">{transaction.name}</td>
+                  <td className="px-4 py-2 text-sm text-gray-500">{transaction.category}</td>
+                  <td className="px-4 py-2 text-sm text-gray-500">
+                    {new Date(transaction.date).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2 text-sm text-gray-900 text-right">
+                    ${transaction.amount}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <p className="text-gray-600">No transactions found</p>
