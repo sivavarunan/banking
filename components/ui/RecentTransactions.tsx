@@ -34,29 +34,34 @@ const RecentTransactions = () => {
         <p className="text-red-500">Error: {error}</p>
       ) : transactions.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {transactions.map((transaction: any) => (
-            <div
-              key={transaction.$id}
-              className={`bg-white shadow-lg rounded-lg p-4 border border-gray-200 transform transition-transform hover:scale-105 hover:shadow-2xl ${
-                transaction.type === 'Income'
-                  ? 'border-green-500 shadow-green-300'
-                  : 'border-red-500 shadow-red-300'
-              }`}
-            >
-              <h3 className="font-medium text-gray-800">{transaction.name}</h3>
-              <p className="text-sm text-gray-500">{transaction.category}</p>
-              <p className="text-sm text-gray-500">
-                {new Date(transaction.date).toLocaleDateString()}
-              </p>
-              <p
-                className={`text-lg font-semibold mt-2 ${
-                  transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+          {transactions.map((transaction: any) => {
+            const isIncome = transaction?.type?.toLowerCase() === 'Income';
+            return (
+              <div
+                key={transaction.$id}
+                className={`bg-white shadow-lg rounded-lg p-4 border border-gray-200 transform transition-transform hover:scale-105 hover:shadow-2xl ${
+                  isIncome
+                    ? 'border-green-500 shadow-green-300'
+                    : 'border-red-500 shadow-red-300'
                 }`}
               >
-                {transaction.type === 'income' ? '+' : '-'}${transaction.amount}
-              </p>
-            </div>
-          ))}
+                <h3 className="font-medium text-gray-800">{transaction.name || 'Unknown Name'}</h3>
+                <p className="text-sm text-gray-500">{transaction.category || 'Uncategorized'}</p>
+                <p className="text-sm text-gray-500">
+                  {transaction.date
+                    ? new Date(transaction.date).toLocaleDateString()
+                    : 'Unknown Date'}
+                </p>
+                <p
+                  className={`text-lg font-semibold mt-2 ${
+                    isIncome ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {isIncome ? '+' : '-'}${transaction.amount || '0.00'}
+                </p>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-gray-600">No transactions found</p>
