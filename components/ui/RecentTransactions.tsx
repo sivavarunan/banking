@@ -9,7 +9,7 @@ const RecentTransactions = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch('/api/transactions'); 
+        const response = await fetch('/api/fetch-transactions'); 
         if (!response.ok) {
           throw new Error('Failed to fetch transactions');
         }
@@ -42,7 +42,7 @@ const RecentTransactions = () => {
                 <p>{new Date(transaction.date).toLocaleDateString()}</p>
               </div>
               <div>
-                <p>${transaction.amount.toFixed(2)}</p>
+                <p>${transaction.amount}</p>
               </div>
             </li>
           ))}
