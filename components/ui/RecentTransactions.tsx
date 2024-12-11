@@ -27,7 +27,6 @@ const RecentTransactions = () => {
 
   return (
     <section className="recent-transactions p-6 bg-gray-100 rounded-lg">
-      <h2 className="text-lg font-semibold text-gray-700 mb-4">Recent Transactions</h2>
       {loading ? (
         <p className="text-gray-600">Loading...</p>
       ) : error ? (
