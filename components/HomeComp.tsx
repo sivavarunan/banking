@@ -19,14 +19,28 @@ const HomeComp = () => {
         }
         const data = await response.json();
         setTransactions(data.transactions || []);
-
-
+  
+        // Calculate balance: add income and subtract expenses
         const balance = (data.transactions || []).reduce(
-            (acc: number, transaction: any) => acc + Number(transaction.amount || 0),
-            0
-          );
-          setTotalBalance(balance);
-          
+          (acc: number, transaction: any) => {
+            const amount = parseFloat(transaction.amount) || 0; // Ensure amount is parsed as a number
+            const category = transaction.category.toLowerCase();
+  
+            // If the transaction is income, add the amount
+            if (category === 'income') {
+              return acc + amount;
+            }
+  
+            // If the transaction is expense, subtract the amount
+            if (category === 'expense') {
+              return acc - amount;
+            }
+  
+            return acc;
+          },
+          0
+        );
+  
         setTotalBalance(balance);
       } catch (err: any) {
         setError(err.message || 'Unknown error occurred');
@@ -34,10 +48,10 @@ const HomeComp = () => {
         setLoading(false);
       }
     };
-
+  
     fetchTransactions();
   }, []);
-
+  
   return (
     <header className="home-header">
       <HeaderBox
