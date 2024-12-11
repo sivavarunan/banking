@@ -20,18 +20,15 @@ const HomeComp = () => {
         const data = await response.json();
         setTransactions(data.transactions || []);
   
-        // Calculate balance: add income and subtract expenses
         const balance = (data.transactions || []).reduce(
           (acc: number, transaction: any) => {
-            const amount = parseFloat(transaction.amount) || 0; // Ensure amount is parsed as a number
+            const amount = parseFloat(transaction.amount) || 0;
             const category = transaction.category.toLowerCase();
-  
-            // If the transaction is income, add the amount
+        
             if (category === 'income') {
               return acc + amount;
             }
-  
-            // If the transaction is expense, subtract the amount
+
             if (category === 'expense') {
               return acc - amount;
             }
@@ -57,12 +54,12 @@ const HomeComp = () => {
       <HeaderBox
         type="greeting"
         title="Welcome"
-        user={'User'} // Replace with dynamic user if available
+        user={'User'}
         subtext="Access and manage your transactions efficiently"
       />
       <TotalBalanceBox
-        accounts={transactions} // Pass transactions if needed
-        totalBanks={1} // Replace with dynamic data if applicable
+        accounts={transactions} 
+        totalBanks={1} 
         totalCurrentBalance={totalBalance}
       />
       {loading ? (
