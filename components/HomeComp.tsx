@@ -20,11 +20,13 @@ const HomeComp = () => {
         const data = await response.json();
         setTransactions(data.transactions || []);
 
-        // Calculate the total balance dynamically
+
         const balance = (data.transactions || []).reduce(
-          (acc: number, transaction: any) => acc + (transaction.amount || 0),
-          0
-        );
+            (acc: number, transaction: any) => acc + Number(transaction.amount || 0),
+            0
+          );
+          setTotalBalance(balance);
+          
         setTotalBalance(balance);
       } catch (err: any) {
         setError(err.message || 'Unknown error occurred');
