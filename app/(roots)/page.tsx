@@ -1,3 +1,4 @@
+import HomeComp from '@/components/HomeComp'
 import HeaderBox from '@/components/ui/HeaderBox'
 import RecentTransactions from '@/components/ui/RecentTransactions'
 import RightSidebar from '@/components/ui/RightSidebar'
@@ -10,19 +11,7 @@ const Home = async () => {
     return (
         <section className='home'>
             <div className='home-content'>
-                <header className='home-header'>
-                    <HeaderBox
-                        type="greeting"
-                        title="Welcome"
-                        user={loggedIn?.name || 'Guest'}
-                        subtext="Access and manage your transection efficienty"
-                    />
-                    <TotalBalanceBox
-                    accounts={[]}
-                    totalBanks={1}
-                    totalCurrentBalance={1250.35}
-                    />
-                </header>
+                <HomeComp />
                 RECENT TRANSECTIONS
                 <RecentTransactions/>
             </div>
