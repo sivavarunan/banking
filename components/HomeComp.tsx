@@ -59,7 +59,7 @@ const HomeComp = () => {
       />
       <TotalBalanceBox
         accounts={transactions} 
-        totalBanks={1} 
+        totalBanks={transactions.length}
         totalCurrentBalance={totalBalance}
       />
       {loading ? (
@@ -67,7 +67,7 @@ const HomeComp = () => {
       ) : error ? (
         <p className="text-red-500 mt-4">Error: {error}</p>
       ) : (
-        <p className="text-gray-600 mt-4">Transactions fetched successfully.</p>
+        <p className="text-gray-600 mt-4"></p>
       )}
     </header>
   );
