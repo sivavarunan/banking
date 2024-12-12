@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import HeaderBox from '@/components/ui/HeaderBox';
 import TotalBalanceBox from '@/components/ui/TotalBalanceBox';
+import { getLoggedInUser } from '@/lib/actions/user.actions';
 
 const HomeComp = () => {
+
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

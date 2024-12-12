@@ -1,8 +1,6 @@
 import HomeComp from '@/components/HomeComp'
-import HeaderBox from '@/components/ui/HeaderBox'
 import RecentTransactions from '@/components/ui/RecentTransactions'
 import RightSidebar from '@/components/ui/RightSidebar'
-import TotalBalanceBox from '@/components/ui/TotalBalanceBox'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 
 const Home = async () => {
