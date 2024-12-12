@@ -5,7 +5,6 @@ import { Doughnut } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
-
   const totalIncome = accounts
     .filter((transaction: any) => transaction.category.toLowerCase() === 'income')
     .reduce((acc: number, transaction: any) => acc + (parseFloat(transaction.amount) || 0), 0);
@@ -19,10 +18,10 @@ const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
       {
         label: 'Income vs Expense',
         data: [totalIncome, totalExpense],
-        backgroundColor: ['#4caf50', '#f44336'],
+        backgroundColor: ['#4caf50', '#f44336'], 
       },
     ],
-    labels: [], 
+    labels: ["Income", "Expense"], 
   };
 
   return (
@@ -31,8 +30,17 @@ const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
       options={{
         cutout: '60%',
         plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                return `${label}: $${value.toLocaleString()}`; 
+              },
+            },
+          },
           legend: {
-            display: true, 
+            display: false,
             position: 'bottom',
           },
         },
