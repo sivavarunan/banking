@@ -21,12 +21,12 @@ const HomeComp = () => {
         }
         const data = await response.json();
         setTransactions(data.transactions || []);
-  
+
         const balance = (data.transactions || []).reduce(
           (acc: number, transaction: any) => {
             const amount = parseFloat(transaction.amount) || 0;
             const category = transaction.category.toLowerCase();
-        
+
             if (category === 'income') {
               return acc + amount;
             }
@@ -34,12 +34,12 @@ const HomeComp = () => {
             if (category === 'expense') {
               return acc - amount;
             }
-  
+
             return acc;
           },
           0
         );
-  
+
         setTotalBalance(balance);
       } catch (err: any) {
         setError(err.message || 'Unknown error occurred');
@@ -47,20 +47,14 @@ const HomeComp = () => {
         setLoading(false);
       }
     };
-  
+
     fetchTransactions();
   }, []);
-  
+
   return (
-    <header className="home-header">
-      <HeaderBox
-        type="greeting"
-        title="Welcome"
-        user={'User'}
-        subtext="Access and manage your transactions efficiently"
-      />
+    <div>
       <TotalBalanceBox
-        accounts={transactions} 
+        accounts={transactions}
         totalBanks={transactions.length}
         totalCurrentBalance={totalBalance}
       />
@@ -71,7 +65,7 @@ const HomeComp = () => {
       ) : (
         <p className="text-gray-600 mt-4"></p>
       )}
-    </header>
+    </div>
   );
 };
 
