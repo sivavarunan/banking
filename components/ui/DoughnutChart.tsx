@@ -1,36 +1,44 @@
-'use client'
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+'use client';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = ({accounts}:DoughnutChartProps) => {
+const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
 
-    const data = {
-        datasets: [
-            {
-                label:'banks',
-                data: [1250, 2500, 3750],
-                backgroundColor: ['#0747b6', '#2265d8', '#2f91fa']
-            }
-        ],
-        labels: ['Bank 1', 'Bank 2', 'Bank 3']
-    }
+  const totalIncome = accounts
+    .filter((transaction: any) => transaction.category.toLowerCase() === 'income')
+    .reduce((acc: number, transaction: any) => acc + (parseFloat(transaction.amount) || 0), 0);
+
+  const totalExpense = accounts
+    .filter((transaction: any) => transaction.category.toLowerCase() === 'expense')
+    .reduce((acc: number, transaction: any) => acc + (parseFloat(transaction.amount) || 0), 0);
+
+  const data = {
+    datasets: [
+      {
+        label: 'Income vs Expense',
+        data: [totalIncome, totalExpense],
+        backgroundColor: ['#4caf50', '#f44336'],
+      },
+    ],
+    labels: [], 
+  };
 
   return (
-  <Doughnut 
-  data ={data}
-  options={{
-    cutout: '60%',
-    plugins: {
-        legend: {
-            display: false
-        }
-    }
+    <Doughnut
+      data={data}
+      options={{
+        cutout: '60%',
+        plugins: {
+          legend: {
+            display: true, 
+            position: 'bottom',
+          },
+        },
+      }}
+    />
+  );
+};
 
-  }}
-  />
-  )
-} 
-
-export default DoughnutChart
+export default DoughnutChart;

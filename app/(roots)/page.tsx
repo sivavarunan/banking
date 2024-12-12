@@ -16,7 +16,8 @@ const Home = async () => {
                         title="Welcome"
                         user={loggedIn?.name || 'Guest'}
                         subtext="Access and manage your transactions efficiently"
-                    /> </header>
+                    />
+                </header>
                 <HomeComp />
                 RECENT TRANSECTIONS
                 <RecentTransactions />
