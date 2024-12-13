@@ -26,7 +26,7 @@ const RecentTransactions = () => {
   }, []);
 
   return (
-    <section className="recent-transactions p-6 bg-gray-100 rounded-lg">
+    <section className="recent-transactions p-6 bg-gray-50 rounded-lg">
       {loading ? (
         <p className="text-gray-600">Loading...</p>
       ) : error ? (
