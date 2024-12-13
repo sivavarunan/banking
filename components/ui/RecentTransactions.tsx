@@ -40,8 +40,8 @@ const RecentTransactions = () => {
                 key={transaction.$id}
                 className={`bg-white shadow-lg rounded-lg p-4 border border-gray-200 transform transition-transform hover:scale-105 hover:shadow-2xl ${
                   isIncome
-                    ? 'border-green-500 shadow-green-300 bg-green-50'
-                    : 'border-red-500 shadow-red-300 bg-red-50'
+                    ? 'border-emerald-500 shadow-green-300 bg-emerald-50'
+                    : 'border-red-500 shadow-red-300 bg-orange-50'
                 }`}
               >
                 <h3 className="font-medium text-gray-800">{transaction.name || 'Unknown Name'}</h3>

@@ -18,7 +18,7 @@ const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
       {
         label: 'Income vs Expense',
         data: [totalIncome, totalExpense],
-        backgroundColor: ['#4caf50', '#f44336'], 
+        backgroundColor: ['#24b339', '#f52249'], 
       },
     ],
     labels: ["Income", "Expense"], 
