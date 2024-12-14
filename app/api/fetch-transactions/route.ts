@@ -58,9 +58,11 @@ export async function DELETE(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { id, data } = await req.json(); // Destructure the id and data from the request body
+    const body = await req.json();
+    console.log("Incoming Request Body:", body); // Log the incoming body
 
-    // Validate the required fields
+    const { id, data } = body;
+
     if (!id || !data) {
       return NextResponse.json(
         { error: "Missing id or data" },
@@ -70,7 +72,6 @@ export async function PATCH(req: NextRequest) {
 
     const { database } = await createSessionClient();
 
-    // Update the document using the $id of the document
     const response = await database.updateDocument(
       DATABASE_ID,
       COLLECTION_ID,
@@ -87,3 +88,4 @@ export async function PATCH(req: NextRequest) {
     );
   }
 }
+
