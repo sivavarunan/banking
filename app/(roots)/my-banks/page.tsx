@@ -1,12 +1,14 @@
-import React from 'react'
+import HeaderBox from "@/components/ui/HeaderBox";
 
 const MyBanks = () => {
   return (
-    <div>
+   
       <div className='home-content'>
-        My Banks
+        <header className='home-header'>
+        <HeaderBox type="greeting" title="My Banks" subtext="" />
+        </header>
       </div>
-    </div>
+   
   )
 }
 
