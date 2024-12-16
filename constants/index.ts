@@ -7,7 +7,7 @@ export const sidebarLinks = [
   {
     imgURL: "/icons/dollar-circle.svg",
     route: "/my-banks",
-    label: "My Banks",
+    label: "My Account",
   },
   {
     imgURL: "/icons/transaction.svg",

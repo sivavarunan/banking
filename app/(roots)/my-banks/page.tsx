@@ -5,11 +5,11 @@ const MyBanks = () => {
    
       <div className='home-content'>
         <header className='home-header'>
-        <HeaderBox type="greeting" title="My Banks" subtext="" />
+        <HeaderBox type="greeting" title="My Account" subtext="" />
         </header>
       </div>
    
   )
 }
 
-export default MyBanks
+export default MyBanks;
