@@ -43,7 +43,7 @@ const Analysis = () => {
    
         <div className="bg-white shadow-md rounded-lg p-4">
           <h2 className="text-xl font-semibold mb-4">Spending Breakdown</h2>
-          <Doughnut data={spendingData} />
+          <Doughnut data={spendingData}/>
         </div>
         <div className="bg-white shadow-md rounded-lg p-4">
           <h2 className="text-xl font-semibold mb-4">Income vs. Expenses</h2>
