@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
     console.error("Error fetching transactions:", error);
     console.error("Error message:", error.message);
 
-    // Provide more detailed error handling
     return NextResponse.json(
       { error: `Failed to fetch transactions: ${error.message || 'Unknown error'}` },
       { status: 500 }
@@ -59,7 +58,7 @@ export async function DELETE(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log("Incoming Request Body:", body); // Log the incoming body
+    console.log("Incoming Request Body:", body);
 
     const { id, data } = body;
 
@@ -75,8 +74,8 @@ export async function PATCH(req: NextRequest) {
     const response = await database.updateDocument(
       DATABASE_ID,
       COLLECTION_ID,
-      id, // The document $id
-      data // The fields to update (name, amount, category, date)
+      id,
+      data
     );
 
     return NextResponse.json({ updatedTransaction: response });
