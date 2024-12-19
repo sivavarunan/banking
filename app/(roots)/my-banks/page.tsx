@@ -95,28 +95,33 @@ const Analysis = () => {
     };
   });
 
-  // Prepare Bar Chart data for monthly income vs expenses
   const incomeExpenseData = {
     labels: months,
     datasets: [
       {
         label: "Income",
-        data: months.map(
-          (month) =>
-            groupedByMonth[month]?.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0) || 0
-        ),
-        backgroundColor: "#4BC0C0",
+        data: months.map((month) => {
+          const monthTransactions = groupedByMonth[month] || [];
+          return monthTransactions
+            .filter((transaction) => transaction.category.toLowerCase() === "income")
+            .reduce((acc, transaction) => acc + (parseFloat(transaction.amount) || 0), 0);
+        }),
+        backgroundColor: "#4BC0C0", // Aqua color for income
       },
       {
         label: "Expenses",
-        data: months.map(
-          (month) =>
-            groupedByMonth[month]?.filter((t) => t.type === "expense").reduce((sum, t) => sum + t.amount, 0) || 0
-        ),
-        backgroundColor: "#FF6384",
+        data: months.map((month) => {
+          const monthTransactions = groupedByMonth[month] || [];
+          return monthTransactions
+            .filter((transaction) => transaction.category.toLowerCase() === "expense")
+            .reduce((acc, transaction) => acc + (parseFloat(transaction.amount) || 0), 0);
+        }),
+        backgroundColor: "#FF6384", // Red color for expenses
       },
     ],
   };
+  
+
 
   // Prepare Line Chart data for cumulative savings
   const cumulativeSavingsData = {
