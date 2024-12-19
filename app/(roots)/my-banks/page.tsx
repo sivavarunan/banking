@@ -104,7 +104,8 @@ const Analysis = () => {
           const monthTransactions = groupedByMonth[month] || [];
           return monthTransactions
             .filter((transaction) => transaction.category.toLowerCase() === "income")
-            .reduce((acc, transaction) => acc + (parseFloat(transaction.amount) || 0), 0);
+            .reduce((acc, transaction) => acc + Number(transaction.amount), 0);
+
         }),
         backgroundColor: "#4BC0C0", // Aqua color for income
       },
@@ -114,7 +115,8 @@ const Analysis = () => {
           const monthTransactions = groupedByMonth[month] || [];
           return monthTransactions
             .filter((transaction) => transaction.category.toLowerCase() === "expense")
-            .reduce((acc, transaction) => acc + (parseFloat(transaction.amount) || 0), 0);
+            .reduce((acc, transaction) => acc + Number(transaction.amount), 0);
+
         }),
         backgroundColor: "#FF6384", // Red color for expenses
       },
