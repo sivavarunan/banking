@@ -39,7 +39,7 @@ const Analysis = () => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch("/api/fetch-transactions");
-        if (!response.ok) throw Error;
+        if (!response.ok) throw new Error("Failed to fetch transactions");
 
         const data = await response.json();
         setTransactionData(
@@ -61,60 +61,73 @@ const Analysis = () => {
     fetchTransactions();
   }, []);
 
-  // Prepare data for the charts
-  const transactionCategories = ["Groceries", "Dining", "Subscription", "Transportation", "Miscellaneous"];
-  const transactionContributionData = {
-    labels: transactionCategories,
-    datasets: [
-      {
-        label: "Transaction Contribution",
-        data: transactionCategories.map(
-          (category) =>
-            transactionData.filter((t) => t.category === category).reduce((sum, t) => sum + t.amount, 0) || 0
-        ),
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
-      },
-    ],
-  };
-
-  const monthlyIncomeExpense = transactionData.reduce(
-    (acc: Record<string, { income: number; expenses: number }>, transaction) => {
+  // Group transactions by month
+  const groupedByMonth = transactionData.reduce(
+    (acc: Record<string, Transaction[]>, transaction) => {
       const month = new Date(transaction.date).toLocaleString("default", { month: "long" });
-      if (!acc[month]) acc[month] = { income: 0, expenses: 0 };
-
-      if (transaction.type === "income") {
-        acc[month].income += transaction.amount;
-      } else {
-        acc[month].expenses += transaction.amount;
-      }
+      if (!acc[month]) acc[month] = [];
+      acc[month].push(transaction);
       return acc;
     },
     {}
   );
 
+  // Prepare Doughnut Chart data for each month
+  const months = Object.keys(groupedByMonth);
+  const doughnutData = months.map((month) => {
+    const transactions = groupedByMonth[month];
+    const categories = Array.from(new Set(transactions.map((t) => t.category)));
+    return {
+      month,
+      data: {
+        labels: categories,
+        datasets: [
+          {
+            label: `${month} Transaction Contribution`,
+            data: categories.map(
+              (category) =>
+                transactions.filter((t) => t.category === category).reduce((sum, t) => sum + t.amount, 0) || 0
+            ),
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+          },
+        ],
+      },
+    };
+  });
+
+  // Prepare Bar Chart data for monthly income vs expenses
   const incomeExpenseData = {
-    labels: Object.keys(monthlyIncomeExpense),
+    labels: months,
     datasets: [
       {
         label: "Income",
-        data: Object.values(monthlyIncomeExpense).map((entry) => entry.income),
+        data: months.map(
+          (month) =>
+            groupedByMonth[month]?.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0) || 0
+        ),
         backgroundColor: "#4BC0C0",
       },
       {
         label: "Expenses",
-        data: Object.values(monthlyIncomeExpense).map((entry) => entry.expenses),
+        data: months.map(
+          (month) =>
+            groupedByMonth[month]?.filter((t) => t.type === "expense").reduce((sum, t) => sum + t.amount, 0) || 0
+        ),
         backgroundColor: "#FF6384",
       },
     ],
   };
 
+  // Prepare Line Chart data for cumulative savings
   const cumulativeSavingsData = {
-    labels: Object.keys(monthlyIncomeExpense),
+    labels: months,
     datasets: [
       {
         label: "Cumulative Savings",
-        data: Object.values(monthlyIncomeExpense).reduce((acc: number[], { income, expenses }) => {
-          const previousSavings = acc.length > 0 ? acc[acc.length - 1] : 0;
+        data: months.reduce((acc: number[], month, idx) => {
+          const previousSavings = idx > 0 ? acc[idx - 1] : 0;
+          const income = incomeExpenseData.datasets[0].data[idx] || 0;
+          const expenses = incomeExpenseData.datasets[1].data[idx] || 0;
           acc.push(previousSavings + income - expenses);
           return acc;
         }, []),
@@ -142,10 +155,12 @@ const Analysis = () => {
       </header>
       <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Transaction Contribution Doughnut Chart */}
-        <div className="bg-white shadow-md rounded-lg p-4 lg:col-span-1">
-          <h2 className="text-xl font-semibold mb-4">Transaction Contribution</h2>
-          <Doughnut data={transactionContributionData} />
-        </div>
+        {doughnutData.map(({ month, data }) => (
+          <div key={month} className="bg-white shadow-md rounded-lg p-4 lg:col-span-1">
+            <h2 className="text-xl font-semibold mb-4">{month} Transaction Contribution</h2>
+            <Doughnut data={data} />
+          </div>
+        ))}
 
         {/* Right-side Charts */}
         <div className="flex flex-col gap-6 lg:col-span-1">
