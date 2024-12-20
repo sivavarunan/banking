@@ -33,6 +33,7 @@ const Analysis = () => {
   const [transactionData, setTransactionData] = useState<Transaction[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
 
   // Fetch transactions from the API
   useEffect(() => {
@@ -95,6 +96,14 @@ const Analysis = () => {
     };
   });
 
+  // Default selected month to the first month available
+  useEffect(() => {
+    if (months.length > 0) {
+      setSelectedMonth(months[0]);
+    }
+  }, [months]);
+
+  // Income and Expense Data
   const incomeExpenseData = {
     labels: months,
     datasets: [
@@ -105,7 +114,6 @@ const Analysis = () => {
           return monthTransactions
             .filter((transaction) => transaction.category.toLowerCase() === "income")
             .reduce((acc, transaction) => acc + Number(transaction.amount), 0);
-
         }),
         backgroundColor: "#4BC0C0", // Aqua color for income
       },
@@ -116,16 +124,13 @@ const Analysis = () => {
           return monthTransactions
             .filter((transaction) => transaction.category.toLowerCase() === "expense")
             .reduce((acc, transaction) => acc + Number(transaction.amount), 0);
-
         }),
         backgroundColor: "#FF6384", // Red color for expenses
       },
     ],
   };
-  
 
-
-  // Prepare Line Chart data for cumulative savings
+  // Cumulative Savings Data
   const cumulativeSavingsData = {
     labels: months,
     datasets: [
@@ -146,7 +151,6 @@ const Analysis = () => {
     ],
   };
 
-  // Render the component
   if (loading) {
     return <Loading />;
   }
@@ -160,17 +164,39 @@ const Analysis = () => {
       <header className="home-header">
         <HeaderBox type="greeting" title="Analysis" subtext="Gain insights into your financial activity" />
       </header>
-      <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Transaction Contribution Doughnut Chart */}
-        {doughnutData.map(({ month, data }) => (
-          <div key={month} className="bg-white shadow-md rounded-lg p-4 lg:col-span-1">
-            <h2 className="text-xl font-semibold mb-4">{month} Transaction Contribution</h2>
-            <Doughnut data={data} />
-          </div>
-        ))}
+
+      <div className="p-6">
+        {/* Dropdown to select a month */}
+        <div className="mb-4">
+          <label htmlFor="month-select" className="block text-lg font-medium mb-2">
+            Select Month:
+          </label>
+          <select
+            id="month-select"
+            className="p-2 border rounded w-full"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          >
+            {months.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Display the selected month's Doughnut Chart */}
+        {doughnutData
+          .filter(({ month }) => month === selectedMonth)
+          .map(({ month, data }) => (
+            <div key={month} className="bg-white shadow-md rounded-lg p-4">
+              <h2 className="text-xl font-semibold mb-4">{month} Transaction Contribution</h2>
+              <Doughnut data={data} />
+            </div>
+          ))}
 
         {/* Right-side Charts */}
-        <div className="flex flex-col gap-6 lg:col-span-1">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Monthly Income vs Expenses Bar Chart */}
           <div className="bg-white shadow-md rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Monthly Income vs Expenses</h2>
