@@ -18,7 +18,7 @@ import { Doughnut, Bar, Line } from "react-chartjs-2";
 import Loading from "@/components/ui/loading";
 import Error from "../../error";
 
-// Register Chart.js components
+
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement);
 
 interface Transaction {
@@ -26,7 +26,7 @@ interface Transaction {
   amount: number;
   date: string;
   category: string;
-  type: string; // "income" or "expense"
+  type: string; 
 }
 
 const Analysis = () => {
@@ -35,12 +35,12 @@ const Analysis = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
 
-  // Fetch transactions from the API
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch("/api/fetch-transactions");
-        if (!response.ok) throw new Error("Failed to fetch transactions");
+        if (!response.ok) throw Error;
 
         const data = await response.json();
         setTransactionData(
@@ -62,7 +62,6 @@ const Analysis = () => {
     fetchTransactions();
   }, []);
 
-  // Group transactions by month
   const groupedByMonth = transactionData.reduce(
     (acc: Record<string, Transaction[]>, transaction) => {
       const month = new Date(transaction.date).toLocaleString("default", { month: "long" });
@@ -73,7 +72,6 @@ const Analysis = () => {
     {}
   );
 
-  // Prepare Doughnut Chart data for each month
   const months = Object.keys(groupedByMonth);
   const doughnutData = months.map((month) => {
     const transactions = groupedByMonth[month];
@@ -96,14 +94,13 @@ const Analysis = () => {
     };
   });
 
-  // Default selected month to the first month available
   useEffect(() => {
     if (months.length > 0) {
       setSelectedMonth(months[0]);
     }
   }, [months]);
 
-  // Income and Expense Data
+
   const incomeExpenseData = {
     labels: months,
     datasets: [
@@ -115,7 +112,7 @@ const Analysis = () => {
             .filter((transaction) => transaction.category.toLowerCase() === "income")
             .reduce((acc, transaction) => acc + Number(transaction.amount), 0);
         }),
-        backgroundColor: "#4BC0C0", // Aqua color for income
+        backgroundColor: "#4BC0C0",
       },
       {
         label: "Expenses",
@@ -125,7 +122,7 @@ const Analysis = () => {
             .filter((transaction) => transaction.category.toLowerCase() === "expense")
             .reduce((acc, transaction) => acc + Number(transaction.amount), 0);
         }),
-        backgroundColor: "#FF6384", // Red color for expenses
+        backgroundColor: "#FF6384",
       },
     ],
   };
