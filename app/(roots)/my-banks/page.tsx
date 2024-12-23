@@ -38,7 +38,7 @@ const Analysis = () => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch("/api/fetch-transactions");
-        if (!response.ok) throw new Error("Failed to fetch transactions");
+        if (!response.ok) throw Error;
 
         const data = await response.json();
         setTransactionData(
@@ -185,7 +185,7 @@ const Analysis = () => {
                 className="bg-white shadow-md rounded-lg p-4"
               >
                 <h2 className="text-lg font-semibold mb-4 text-center">{month} Transaction Contribution</h2>
-                <div className="relative h-64 mx-auto">
+                <div className="relative h-96 mx-auto">
                   <Doughnut
                     data={data}
                     options={{
@@ -202,7 +202,7 @@ const Analysis = () => {
 
         {/* Bar Chart */}
         <div className="mb-6 lg:col-span-2">
-          <div className="bg-white shadow-md rounded-lg p-4">
+          <div className="bg-white shadow-md  rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Monthly Income vs Expenses</h2>
             <Bar
               data={incomeExpenseData}
