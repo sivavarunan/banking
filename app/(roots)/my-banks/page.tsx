@@ -18,7 +18,6 @@ import { Doughnut, Bar, Line } from "react-chartjs-2";
 import Loading from "@/components/ui/loading";
 import Error from "../../error";
 
-
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement);
 
 interface Transaction {
@@ -35,12 +34,11 @@ const Analysis = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
 
-
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch("/api/fetch-transactions");
-        if (!response.ok) throw Error;
+        if (!response.ok) throw new Error("Failed to fetch transactions");
 
         const data = await response.json();
         setTransactionData(
@@ -100,7 +98,6 @@ const Analysis = () => {
     }
   }, [months]);
 
-
   const incomeExpenseData = {
     labels: months,
     datasets: [
@@ -127,7 +124,6 @@ const Analysis = () => {
     ],
   };
 
-  // Cumulative Savings Data
   const cumulativeSavingsData = {
     labels: months,
     datasets: [
@@ -157,20 +153,20 @@ const Analysis = () => {
   }
 
   return (
-    <div className="home-content">
-      <header className="home-header">
+    <div className="home-content p-4">
+      <header className="home-header mb-4">
         <HeaderBox type="greeting" title="Analysis" subtext="Gain insights into your financial activity" />
       </header>
 
-      <div className="p-6">
-        {/* Dropdown to select a month */}
-        <div className="mb-4">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 lg:gap-6">
+        {/* Doughnut Chart and Month Selector */}
+        <div className="mb-6 lg:mb-0 lg:col-span-1">
           <label htmlFor="month-select" className="block text-lg font-medium mb-2">
             Select Month:
           </label>
           <select
             id="month-select"
-            className="p-2 border rounded w-full"
+            className="p-2 border rounded w-full mb-4"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
           >
@@ -180,21 +176,32 @@ const Analysis = () => {
               </option>
             ))}
           </select>
+
+          {doughnutData
+            .filter(({ month }) => month.toLowerCase() === selectedMonth.toLowerCase())
+            .map(({ month, data }) => (
+              <div
+                key={month}
+                className="bg-white shadow-md rounded-lg p-4"
+              >
+                <h2 className="text-lg font-semibold mb-4 text-center">{month} Transaction Contribution</h2>
+                <div className="relative h-64 mx-auto">
+                  <Doughnut
+                    data={data}
+                    options={{
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: { display: false },
+                      },
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
         </div>
 
-        {/* Display the selected month's Doughnut Chart */}
-        {doughnutData
-          .filter(({ month }) => month === selectedMonth)
-          .map(({ month, data }) => (
-            <div key={month} className="bg-white shadow-md w-3/6 rounded-lg p-4 ">
-              <h2 className="text-xl font-semibold mb-4">{month} Transaction Contribution</h2>
-              <Doughnut data={data} />
-            </div>
-          ))}
-
-        {/* Right-side Charts */}
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Monthly Income vs Expenses Bar Chart */}
+        {/* Bar Chart */}
+        <div className="mb-6 lg:col-span-2">
           <div className="bg-white shadow-md rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Monthly Income vs Expenses</h2>
             <Bar
@@ -207,8 +214,10 @@ const Analysis = () => {
               }}
             />
           </div>
+        </div>
 
-          {/* Cumulative Savings Line Chart */}
+        {/* Line Chart */}
+        <div className="lg:col-span-2">
           <div className="bg-white shadow-md rounded-lg p-4">
             <h2 className="text-xl font-semibold mb-4">Cumulative Savings</h2>
             <Line
