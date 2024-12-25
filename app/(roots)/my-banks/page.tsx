@@ -27,11 +27,19 @@ interface Transaction {
   type: string;
 }
 
-const generateColors = (count: number) => {
-  return Array.from({ length: count }, () => {
-    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`;
-    return randomColor;
+const generateGradientColors = (baseColor: string, count: number) => {
+  // Generate gradients by varying brightness
+  return Array.from({ length: count }, (_, i) => {
+    const lightness = 50 + i * (40 / count); // Gradually increase lightness
+    return `hsl(${baseColor}, 70%, ${lightness}%)`;
   });
+};
+
+const getCategoryBaseColor = (category: string) => {
+  // Assign contrasting base colors for categories
+  if (category.toLowerCase() === "income") return "120"; // Green
+  if (category.toLowerCase() === "expense") return "0"; // Red
+  return "200"; // Default: Blue
 };
 
 const Analysis = () => {
@@ -87,12 +95,15 @@ const Analysis = () => {
     return {
       month,
       data: {
-        labels: transactions.map((transaction) => `${transaction.name} (${transaction.amount})`), // Use transaction name
+        labels: transactions.map((transaction) => `${transaction.name} (${transaction.amount})`),
         datasets: [
           {
             label: `Transactions in ${month}`,
             data: transactionAmounts,
-            backgroundColor: generateColors(transactionCount),
+            backgroundColor: transactions.map((transaction) => {
+              const baseColor = getCategoryBaseColor(transaction.category);
+              return generateGradientColors(baseColor, transactionCount);
+            }).flat(),
           },
         ],
       },
