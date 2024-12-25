@@ -22,7 +22,7 @@ interface Transaction {
   id: string;
   amount: number;
   date: string;
-  category: string;
+  category: string; // Used as the identifier
   type: string;
 }
 
@@ -85,13 +85,11 @@ const Analysis = () => {
     return {
       month,
       data: {
-        labels: transactions.map(
-          (transaction, index) => `Transaction ${index + 1} (${transaction.amount})`
-        ),
+        labels: transactions.map((transaction) => `${transaction.category} (${transaction.amount})`), // Use transaction category
         datasets: [
           {
             label: `Transactions in ${month}`,
-            data: transactionAmounts, // Use transaction amounts
+            data: transactionAmounts,
             backgroundColor: generateColors(transactionCount),
           },
         ],
