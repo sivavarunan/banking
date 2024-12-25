@@ -79,16 +79,19 @@ const Analysis = () => {
 
   const doughnutData = months.map((month) => {
     const transactions = groupedByMonth[month];
+    const transactionAmounts = transactions.map((transaction) => transaction.amount);
     const transactionCount = transactions.length;
 
     return {
       month,
       data: {
-        labels: transactions.map((transaction, index) => `Transaction ${index + 1}`),
+        labels: transactions.map(
+          (transaction, index) => `Transaction ${index + 1} (${transaction.amount})`
+        ),
         datasets: [
           {
             label: `Transactions in ${month}`,
-            data: transactions.map(() => 1),
+            data: transactionAmounts, // Use transaction amounts
             backgroundColor: generateColors(transactionCount),
           },
         ],
