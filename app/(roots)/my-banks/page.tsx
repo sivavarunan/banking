@@ -36,7 +36,7 @@ const generateGradientColors = (baseColor: string, count: number) => {
 };
 
 const getCategoryBaseColor = (category: string) => {
-  // Assign contrasting base colors for categories
+
   if (category.toLowerCase() === "income") return "120"; // Green
   if (category.toLowerCase() === "expense") return "0"; // Red
   return "200"; // Default: Blue
