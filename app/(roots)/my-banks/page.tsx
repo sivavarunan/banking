@@ -28,9 +28,8 @@ interface Transaction {
 }
 
 const generateGradientColors = (baseColor: string, count: number) => {
-  // Generate gradients by varying brightness
   return Array.from({ length: count }, (_, i) => {
-    const lightness = 50 + i * (40 / count); // Gradually increase lightness
+    const lightness = 50 + i * (40 / count);
     return `hsl(${baseColor}, 70%, ${lightness}%)`;
   });
 };
@@ -62,7 +61,7 @@ const Analysis = () => {
             date: transaction.date,
             category: transaction.category,
             name: transaction.name,
-            type: transaction.type || "expense",
+            type: transaction.type || "",
           }))
         );
       } catch (err: any) {
