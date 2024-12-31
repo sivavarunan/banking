@@ -177,7 +177,7 @@ const Analysis = () => {
             .map(({ month, data }) => (
               <div key={month} className="bg-white shadow-md rounded-lg p-4">
                 <h2 className="text-lg font-semibold mb-4 text-center">{month} Transactions</h2>
-                <div className="relative h-64 mx-auto">
+                <div className="relative h-96 mx-auto">
                   <Doughnut
                     data={data}
                     options={{
