@@ -29,15 +29,15 @@ interface Transaction {
 
 const generateGradientColors = (baseColor: string, count: number) => {
   return Array.from({ length: count }, (_, i) => {
-    const lightness = 50 + i * (40 / count); // Gradually vary lightness
+    const lightness = 50 + i * (40 / count); 
     return `hsl(${baseColor}, 70%, ${lightness}%)`;
   });
 };
 
 const getCategoryBaseColor = (type: string) => {
-  if (type.toLowerCase() === "income") return "120"; // Green for income
-  if (type.toLowerCase() === "expense") return "0"; // Red for expense
-  return "200"; // Default: Blue
+  if (type.toLowerCase() === "income") return "120"; 
+  if (type.toLowerCase() === "expense") return "0"; 
+  return "200"; 
 };
 
 const Analysis = () => {
@@ -60,7 +60,7 @@ const Analysis = () => {
             date: transaction.date,
             category: transaction.category,
             name: transaction.name,
-            type: transaction.type || "expense", // Default to expense
+            type: transaction.category || "expense",
           }))
         );
       } catch (err: any) {
