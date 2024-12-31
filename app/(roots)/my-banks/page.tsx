@@ -50,7 +50,7 @@ const Analysis = () => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch("/api/fetch-transactions");
-        if (!response.ok) throw new Error("Failed to fetch transactions");
+        if (!response.ok) throw Error;
 
         const data = await response.json();
         setTransactionData(
