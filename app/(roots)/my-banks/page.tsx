@@ -29,16 +29,15 @@ interface Transaction {
 
 const generateGradientColors = (baseColor: string, count: number) => {
   return Array.from({ length: count }, (_, i) => {
-    const lightness = 50 + i * (40 / count);
+    const lightness = 50 + i * (40 / count); // Gradually vary lightness
     return `hsl(${baseColor}, 70%, ${lightness}%)`;
   });
 };
 
-const getCategoryBaseColor = (category: string) => {
-
-  if (category.toLowerCase() === "income") return "120"; 
-  if (category.toLowerCase() === "expense") return "0"; 
-  return "200"; 
+const getCategoryBaseColor = (type: string) => {
+  if (type.toLowerCase() === "income") return "120"; // Green for income
+  if (type.toLowerCase() === "expense") return "0"; // Red for expense
+  return "200"; // Default: Blue
 };
 
 const Analysis = () => {
@@ -51,7 +50,7 @@ const Analysis = () => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch("/api/fetch-transactions");
-        if (!response.ok) throw Error;
+        if (!response.ok) throw new Error("Failed to fetch transactions");
 
         const data = await response.json();
         setTransactionData(
@@ -61,7 +60,7 @@ const Analysis = () => {
             date: transaction.date,
             category: transaction.category,
             name: transaction.name,
-            type: transaction.type || "",
+            type: transaction.type || "expense", // Default to expense
           }))
         );
       } catch (err: any) {
@@ -99,10 +98,10 @@ const Analysis = () => {
           {
             label: `Transactions in ${month}`,
             data: transactionAmounts,
-            backgroundColor: transactions.map((transaction) => {
-              const baseColor = getCategoryBaseColor(transaction.category);
-              return generateGradientColors(baseColor, transactionCount);
-            }).flat(),
+            backgroundColor: transactions.map((transaction, index) => {
+              const baseColor = getCategoryBaseColor(transaction.type);
+              return generateGradientColors(baseColor, transactionCount)[index];
+            }),
           },
         ],
       },
@@ -110,10 +109,10 @@ const Analysis = () => {
   });
 
   useEffect(() => {
-    if (months.length > 0) {
+    if (months.length > 0 && !selectedMonth) {
       setSelectedMonth(months[0]);
     }
-  }, [months]);
+  }, [months, selectedMonth]);
 
   const incomeExpenseData = {
     labels: months,
@@ -174,7 +173,7 @@ const Analysis = () => {
           </select>
 
           {doughnutData
-            .filter(({ month }) => month.toLowerCase() === selectedMonth.toLowerCase())
+            .filter(({ month }) => month === selectedMonth)
             .map(({ month, data }) => (
               <div key={month} className="bg-white shadow-md rounded-lg p-4">
                 <h2 className="text-lg font-semibold mb-4 text-center">{month} Transactions</h2>
