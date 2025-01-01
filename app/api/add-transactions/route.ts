@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     // Fetch the logged-in user's details
     const user = await account.get();
-    const userId = user.$id; // Logged-in user's ID
+    const userId = user.$id; 
 
   
     const transactionId = `txn_${Date.now()}`;
