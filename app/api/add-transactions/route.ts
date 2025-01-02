@@ -8,21 +8,18 @@ export async function POST(req: Request) {
   try {
     const { name, amount, date, category } = await req.json();
 
-    // Validate fields
     if (!name || !amount || !date || !category) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
     const { account, database } = await createSessionClient();
 
-    // Fetch the logged-in user's details
     const user = await account.get();
     const userId = user.$id; 
 
   
     const transactionId = `txn_${Date.now()}`;
 
-    // Add transaction to Appwrite database
     const response = await database.createDocument(
       DATABASE_ID,
       COLLECTION_ID,
