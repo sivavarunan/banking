@@ -33,14 +33,14 @@ const TransactionHistory: React.FC = () => {
   const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
 
-  // Calculate the total amount by summing income and subtracting expenses
+
   const totalAmount = transactions.reduce((sum, transaction) => {
     return transaction.category.toLowerCase() === "income"
       ? sum + transaction.amount
       : sum - transaction.amount;
   }, 0);
 
-  // Format a date string for display
+
   const formatDate = (date: string) => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -54,7 +54,6 @@ const TransactionHistory: React.FC = () => {
     return new Date(date).toLocaleString("en-US", options);
   };
 
-  // Fetch transactions from the API
   const fetchTransactions = async () => {
     try {
       const response = await fetch("/api/fetch-transactions");
@@ -78,7 +77,6 @@ const TransactionHistory: React.FC = () => {
     }
   };
 
-  // Delete a transaction by ID
   const deleteTransaction = async (id: string) => {
     try {
       const response = await fetch(`/api/fetch-transactions?id=${id}`, {
@@ -94,7 +92,6 @@ const TransactionHistory: React.FC = () => {
     }
   };
 
-  // Start editing a transaction
   const editTransaction = (id: string) => {
     const transaction = transactions.find((t) => t.id === id);
     if (transaction) {
@@ -121,8 +118,8 @@ const TransactionHistory: React.FC = () => {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: editing, // Transaction ID
-          data: updatedTransaction, // Fields to update
+          id: editing, 
+          data: updatedTransaction, 
         }),
       });
   
@@ -134,7 +131,6 @@ const TransactionHistory: React.FC = () => {
   
       const result = await response.json();
       console.log("Update successful:", result);
-      // Update state, close modal, etc.
     } catch (err: any) {
       console.error("Error on editing transaction:", err.message);
       setError(err.message || "Failed to update transaction");
@@ -142,24 +138,20 @@ const TransactionHistory: React.FC = () => {
   };
   
   
-  // Retry fetching transactions
   const retryFetchTransactions = () => {
     setLoading(true);
     setError(null);
     fetchTransactions();
   };
 
-  // Fetch transactions on component mount
   useEffect(() => {
     fetchTransactions();
   }, []);
 
-  // Show loading spinner
   if (loading) {
     return <div className="text-center text-gray-600"><Loading /></div>;
   }
 
-  // Show error message if an error occurred
   if (error) {
     return <Error error={error} reset={retryFetchTransactions} />;
   }
@@ -171,7 +163,6 @@ const TransactionHistory: React.FC = () => {
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
         </header>
 
-        {/* Summary Section */}
         <div className="my-4">
           <Label className="text-lg font-semibold text-gray-700">
             Total Transactions: {totalTransactions}
@@ -184,7 +175,6 @@ const TransactionHistory: React.FC = () => {
           </Label>
         </div>
 
-        {/* Transactions Table */}
         <div className="overflow-x-auto mt-10">
           <table className="min-w-full bg-white border border-gray-200 rounded-md">
             <thead>
@@ -215,7 +205,6 @@ const TransactionHistory: React.FC = () => {
                     )}
                   </td>
 
-                  {/* Amount */}
                   <td className={`px-4 py-2 text-sm ${transaction.category.toLowerCase() === "income" ? "text-green-600" : "text-red-600"}`}>
                     {editing === transaction.id ? (
                       <Input
@@ -233,7 +222,6 @@ const TransactionHistory: React.FC = () => {
                     )}
                   </td>
 
-                  {/* Date */}
                   <td className="px-4 py-2 text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <Input
@@ -246,8 +234,6 @@ const TransactionHistory: React.FC = () => {
                       transaction.date
                     )}
                   </td>
-
-                  {/* Category */}
                   <td className="px-4 py-2 text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <select
@@ -265,7 +251,6 @@ const TransactionHistory: React.FC = () => {
                     )}
                   </td>
 
-                  {/* Actions */}
                   <td className="px-4 py-2 text-sm">
                     {editing === transaction.id ? (
                       <button
