@@ -38,11 +38,10 @@ const RecentTransactions = () => {
             return (
               <div
                 key={transaction.$id}
-                className={`bg-white shadow-lg rounded-lg p-4 border border-gray-200 transform transition-transform hover:scale-105 hover:shadow-2xl ${
-                  isIncome
+                className={`bg-white shadow-lg rounded-lg p-4 border border-gray-200 transform transition-transform hover:scale-105 hover:shadow-2xl ${isIncome
                     ? 'border-green-200 shadow-green-300 bg-emerald-50'
                     : 'border-red-200 shadow-red-300 bg-orange-50'
-                }`}
+                  }`}
               >
                 <h3 className="font-medium text-gray-800">{transaction.name || 'Unknown Name'}</h3>
                 <p className="text-sm text-gray-500">{transaction.category || 'Uncategorized'}</p>
@@ -52,9 +51,8 @@ const RecentTransactions = () => {
                     : 'Unknown Date'}
                 </p>
                 <p
-                  className={`text-lg font-semibold mt-2 ${
-                    isIncome ? 'text-green-600' : 'text-red-600'
-                  }`}
+                  className={`text-lg font-semibold mt-2 ${isIncome ? 'text-green-600' : 'text-red-600'
+                    }`}
                 >
                   {isIncome ? '+' : '-'}${transaction.amount || '0.00'}
                 </p>

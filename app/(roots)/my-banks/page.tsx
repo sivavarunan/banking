@@ -29,15 +29,15 @@ interface Transaction {
 
 const generateGradientColors = (baseColor: string, count: number) => {
   return Array.from({ length: count }, (_, i) => {
-    const lightness = 50 + i * (40 / count); 
+    const lightness = 50 + i * (40 / count);
     return `hsl(${baseColor}, 70%, ${lightness}%)`;
   });
 };
 
 const getCategoryBaseColor = (type: string) => {
-  if (type.toLowerCase() === "income") return "120"; 
-  if (type.toLowerCase() === "expense") return "0"; 
-  return "200"; 
+  if (type.toLowerCase() === "income") return "120";
+  if (type.toLowerCase() === "expense") return "0";
+  return "200";
 };
 
 const Analysis = () => {
