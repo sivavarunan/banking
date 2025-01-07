@@ -121,7 +121,7 @@ const TransactionHistory: React.FC = () => {
       });
   
       if (!response.ok) {
-        throw new Error("Failed to update the transaction.");
+        throw Error;
       }
   
       // Update the local state
