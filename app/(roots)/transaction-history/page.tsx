@@ -124,7 +124,6 @@ const TransactionHistory: React.FC = () => {
         throw Error;
       }
   
-      // Update the local state
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing
@@ -132,8 +131,6 @@ const TransactionHistory: React.FC = () => {
             : transaction
         )
       );
-  
-      // Reset editing state
       setEditing(null);
       setEditedTransaction({});
     } catch (err: any) {
