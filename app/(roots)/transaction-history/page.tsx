@@ -160,90 +160,134 @@ const TransactionHistory: React.FC = () => {
 
   return (
     <div className="home-content">
-      <div className="p-4 bg-gray-50 rounded-md shadow-md">
-        <header className="home-header">
+      <div className="p-6 bg-white shadow-md rounded-lg">
+        {/* Header Section */}
+        <header className="mb-6">
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
+          <div className="flex flex-wrap justify-between items-center mt-4">
+            <div className="mb-4 sm:mb-0">
+              <Label className="text-xl font-semibold text-gray-800">
+                Total Transactions: 
+                <span className="ml-2 text-indigo-600">{totalTransactions}</span>
+              </Label>
+            </div>
+            <div>
+              <Label className="text-xl font-semibold text-gray-800">
+                Total Amount:{" "}
+                <span
+                  className={`${
+                    totalAmount >= 0 ? "text-green-600" : "text-red-600"
+                  } ml-2`}
+                >
+                  {totalAmount >= 0 ? `+$${totalAmount}` : `-$${Math.abs(totalAmount)}`}
+                </span>
+              </Label>
+            </div>
+          </div>
         </header>
-
-        <div className="my-4">
-          <Label className="text-lg font-semibold text-gray-700">
-            Total Transactions: {totalTransactions}
-          </Label>
-          <Label className="text-lg font-semibold text-gray-700 ml-10">
-            Total Amount: 
-            <span className={`${totalAmount >= 0 ? "text-green-600" : "text-red-600"}`}>
-              {totalAmount >= 0 ? `+ $${totalAmount}` : `- $${Math.abs(totalAmount)}`}
-            </span>
-          </Label>
-        </div>
-
-        <div className="overflow-x-auto mt-10">
-          <table className="min-w-full bg-white border border-gray-200 rounded-md">
+  
+        {/* Transaction Table */}
+        <div className="overflow-x-auto mt-6">
+          <table className="min-w-full border-collapse border border-gray-200 rounded-lg">
             <thead>
               <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Name</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Amount</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Date</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Category</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Actions</th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                  Amount
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction.id} className="border-b last:border-b-0">
+              {transactions.map((transaction, index) => (
+                <tr
+                  key={transaction.id}
+                  className={`${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } border-b border-gray-200`}
+                >
                   {/* Name */}
-                  <td className="px-4 py-2 text-sm text-gray-800">
+                  <td className="px-6 py-4 text-sm text-gray-800">
                     {editing === transaction.id ? (
                       <Input
                         type="text"
                         value={editedTransaction.name || transaction.name}
                         onChange={(e) =>
-                          setEditedTransaction({ ...editedTransaction, name: e.target.value })
+                          setEditedTransaction({
+                            ...editedTransaction,
+                            name: e.target.value,
+                          })
                         }
-                        className="border p-1 rounded"
+                        className="border border-gray-300 rounded p-2 w-full"
                       />
                     ) : (
                       transaction.name
                     )}
                   </td>
-
-                  <td className={`px-4 py-2 text-sm ${transaction.category.toLowerCase() === "income" ? "text-green-600" : "text-red-600"}`}>
+  
+                  {/* Amount */}
+                  <td
+                    className={`px-6 py-4 text-sm ${
+                      transaction.category.toLowerCase() === "income"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
                     {editing === transaction.id ? (
                       <Input
                         type="number"
                         value={editedTransaction.amount || transaction.amount}
                         onChange={(e) =>
-                          setEditedTransaction({ ...editedTransaction, amount: +e.target.value })
+                          setEditedTransaction({
+                            ...editedTransaction,
+                            amount: +e.target.value,
+                          })
                         }
-                        className="border p-1 rounded"
+                        className="border border-gray-300 rounded p-2 w-full"
                       />
+                    ) : transaction.category.toLowerCase() === "income" ? (
+                      `+ $${transaction.amount}`
                     ) : (
-                      transaction.category.toLowerCase() === "income"
-                        ? `+ $${transaction.amount}`
-                        : `- $${Math.abs(transaction.amount)}`
+                      `- $${Math.abs(transaction.amount)}`
                     )}
                   </td>
-
-                  <td className="px-4 py-2 text-sm text-gray-600">
+  
+                  {/* Date */}
+                  <td className="px-6 py-4 text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <Input
                         type="text"
                         value={editedTransaction.date || formatDate(transaction.date)}
                         disabled
-                        className="border p-1 rounded"
+                        className="border border-gray-300 rounded p-2 w-full"
                       />
                     ) : (
                       transaction.date
                     )}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-600">
+  
+                  {/* Category */}
+                  <td className="px-6 py-4 text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <select
                         value={editedTransaction.category || transaction.category}
                         onChange={(e) =>
-                          setEditedTransaction({ ...editedTransaction, category: e.target.value })
+                          setEditedTransaction({
+                            ...editedTransaction,
+                            category: e.target.value,
+                          })
                         }
-                        className="border p-1 rounded"
+                        className="border border-gray-300 rounded p-2 w-full"
                       >
                         <option value="income">Income</option>
                         <option value="expense">Expense</option>
@@ -252,8 +296,9 @@ const TransactionHistory: React.FC = () => {
                       transaction.category
                     )}
                   </td>
-
-                  <td className="px-4 py-2 text-sm">
+  
+                  {/* Actions */}
+                  <td className="px-6 py-4 text-sm">
                     {editing === transaction.id ? (
                       <button
                         onClick={saveEditedTransaction}
@@ -284,6 +329,7 @@ const TransactionHistory: React.FC = () => {
       </div>
     </div>
   );
+  
 };
 
 export default TransactionHistory;
