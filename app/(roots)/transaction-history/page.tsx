@@ -160,19 +160,19 @@ const TransactionHistory: React.FC = () => {
 
   return (
     <div className="home-content">
-      <div className="p-6 bg-white shadow-md rounded-lg">
+      <div className="p-4 sm:p-6 bg-white shadow-md rounded-lg">
         {/* Header Section */}
         <header className="mb-6">
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
-          <div className="flex flex-wrap justify-between items-center mt-4">
-            <div className="mb-4 sm:mb-0">
-              <Label className="text-xl font-semibold text-gray-800">
-                Total Transactions: 
+          <div className="flex flex-wrap justify-between items-center mt-4 space-y-4 sm:space-y-0">
+            <div>
+              <Label className="text-lg sm:text-xl font-semibold text-gray-800">
+                Total Transactions:{" "}
                 <span className="ml-2 text-indigo-600">{totalTransactions}</span>
               </Label>
             </div>
             <div>
-              <Label className="text-xl font-semibold text-gray-800">
+              <Label className="text-lg sm:text-xl font-semibold text-gray-800">
                 Total Amount:{" "}
                 <span
                   className={`${
@@ -187,23 +187,23 @@ const TransactionHistory: React.FC = () => {
         </header>
   
         {/* Transaction Table */}
-        <div className="overflow-x-auto mt-6">
+        <div className="overflow-x-auto">
           <table className="min-w-full border-collapse border border-gray-200 rounded-lg">
             <thead>
               <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
                   Amount
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
                   Actions
                 </th>
               </tr>
@@ -217,7 +217,7 @@ const TransactionHistory: React.FC = () => {
                   } border-b border-gray-200`}
                 >
                   {/* Name */}
-                  <td className="px-6 py-4 text-sm text-gray-800">
+                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-800 truncate">
                     {editing === transaction.id ? (
                       <Input
                         type="text"
@@ -237,7 +237,7 @@ const TransactionHistory: React.FC = () => {
   
                   {/* Amount */}
                   <td
-                    className={`px-6 py-4 text-sm ${
+                    className={`px-4 sm:px-6 py-4 text-xs sm:text-sm ${
                       transaction.category.toLowerCase() === "income"
                         ? "text-green-600"
                         : "text-red-600"
@@ -263,7 +263,7 @@ const TransactionHistory: React.FC = () => {
                   </td>
   
                   {/* Date */}
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <Input
                         type="text"
@@ -277,7 +277,7 @@ const TransactionHistory: React.FC = () => {
                   </td>
   
                   {/* Category */}
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <select
                         value={editedTransaction.category || transaction.category}
@@ -298,7 +298,7 @@ const TransactionHistory: React.FC = () => {
                   </td>
   
                   {/* Actions */}
-                  <td className="px-6 py-4 text-sm">
+                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm">
                     {editing === transaction.id ? (
                       <button
                         onClick={saveEditedTransaction}
@@ -329,6 +329,7 @@ const TransactionHistory: React.FC = () => {
       </div>
     </div>
   );
+  
   
 };
 
