@@ -101,41 +101,46 @@ const TransactionHistory: React.FC = () => {
   };
 
   const saveEditedTransaction = async () => {
+    if (!editing || !editedTransaction.name || !editedTransaction.amount) {
+      setError("Please fill in all fields before saving.");
+      return;
+    }
+  
     try {
       const updatedTransaction = {
         name: editedTransaction.name,
         amount: editedTransaction.amount,
-        category: editedTransaction.category,
+        category: editedTransaction.category || "income", // Default category if not provided
         date: editedTransaction.date || new Date().toISOString(),
       };
-  
-      console.log("Payload sent to API:", {
-        id: editing,
-        data: updatedTransaction,
-      });
   
       const response = await fetch("/api/fetch-transactions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: editing, 
-          data: updatedTransaction, 
-        }),
+        body: JSON.stringify({ id: editing, data: updatedTransaction }),
       });
   
       if (!response.ok) {
-        const errorResponse = await response.json();
-        console.error("Error Response:", errorResponse);
-        throw Error;
+        throw new Error("Failed to update the transaction.");
       }
   
-      const result = await response.json();
-      console.log("Update successful:", result);
+      // Update the local state
+      setTransactions((prev) =>
+        prev.map((transaction) =>
+          transaction.id === editing
+            ? { ...transaction, ...updatedTransaction, date: formatDate(updatedTransaction.date) }
+            : transaction
+        )
+      );
+  
+      // Reset editing state
+      setEditing(null);
+      setEditedTransaction({});
     } catch (err: any) {
-      console.error("Error on editing transaction:", err.message);
       setError(err.message || "Failed to update transaction");
     }
   };
+  
   
   
   const retryFetchTransactions = () => {
