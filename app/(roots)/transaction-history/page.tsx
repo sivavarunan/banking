@@ -185,8 +185,6 @@ const TransactionHistory: React.FC = () => {
             </div>
           </div>
         </header>
-  
-        {/* Transaction Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse border border-gray-200 rounded-lg">
             <thead>
