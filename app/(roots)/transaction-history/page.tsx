@@ -33,13 +33,11 @@ const TransactionHistory: React.FC = () => {
   const [editing, setEditing] = useState<string | null>(null);
   const [editedTransaction, setEditedTransaction] = useState<Partial<Transaction>>({});
 
-
   const totalAmount = transactions.reduce((sum, transaction) => {
     return transaction.category.toLowerCase() === "income"
       ? sum + transaction.amount
       : sum - transaction.amount;
   }, 0);
-
 
   const formatDate = (date: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -105,25 +103,25 @@ const TransactionHistory: React.FC = () => {
       setError("Please fill in all fields before saving.");
       return;
     }
-  
+
     try {
       const updatedTransaction = {
         name: editedTransaction.name,
         amount: editedTransaction.amount,
-        category: editedTransaction.category || "income", // Default category if not provided
+        category: editedTransaction.category || "income",
         date: editedTransaction.date || new Date().toISOString(),
       };
-  
+
       const response = await fetch("/api/fetch-transactions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: editing, data: updatedTransaction }),
       });
-  
+
       if (!response.ok) {
         throw Error;
       }
-  
+
       setTransactions((prev) =>
         prev.map((transaction) =>
           transaction.id === editing
@@ -137,9 +135,7 @@ const TransactionHistory: React.FC = () => {
       setError(err.message || "Failed to update transaction");
     }
   };
-  
-  
-  
+
   const retryFetchTransactions = () => {
     setLoading(true);
     setError(null);
@@ -161,63 +157,41 @@ const TransactionHistory: React.FC = () => {
   return (
     <div className="home-content">
       <div className="p-4 sm:p-6 bg-white shadow-md rounded-lg">
-        {/* Header Section */}
         <header className="mb-6">
           <HeaderBox type="greeting" title="Transaction History" subtext="" />
           <div className="flex flex-wrap justify-between items-center mt-4 space-y-4 sm:space-y-0">
-            <div>
-              <Label className="text-lg sm:text-xl font-semibold text-gray-800">
-                Total Transactions:{" "}
-                <span className="ml-2 text-indigo-600">{totalTransactions}</span>
-              </Label>
-            </div>
-            <div>
-              <Label className="text-lg sm:text-xl font-semibold text-gray-800">
-                Total Amount:{" "}
-                <span
-                  className={`${
-                    totalAmount >= 0 ? "text-green-600" : "text-red-600"
-                  } ml-2`}
-                >
-                  {totalAmount >= 0 ? `+$${totalAmount}` : `-$${Math.abs(totalAmount)}`}
-                </span>
-              </Label>
-            </div>
+            <Label className="text-lg sm:text-xl font-semibold text-gray-800">
+              Total Transactions: <span className="ml-2 text-indigo-600">{totalTransactions}</span>
+            </Label>
+            <Label className="text-lg sm:text-xl font-semibold text-gray-800">
+              Total Amount:{" "}
+              <span className={`${totalAmount >= 0 ? "text-green-600" : "text-red-600"} ml-2`}>
+                {totalAmount >= 0 ? `+$${totalAmount}` : `-$${Math.abs(totalAmount)}`}
+              </span>
+            </Label>
           </div>
         </header>
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse border border-gray-200 rounded-lg">
+          <table className="min-w-full border-collapse border border-gray-300 rounded-lg shadow-lg transition-all hover:border-indigo-500 hover:shadow-indigo-300/50">
             <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
-                  Name
-                </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
-                  Amount
-                </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
-                  Date
-                </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
-                  Category
-                </th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase">
-                  Actions
-                </th>
+              <tr className="bg-gray-100 border-b border-gray-300">
+                {["Name", "Amount", "Date", "Category", "Actions"].map((heading) => (
+                  <th
+                    key={heading}
+                    className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-600 uppercase"
+                  >
+                    {heading}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-  {transactions.map((transaction, index) => (
-    <tr
-      key={transaction.id}
-      className={`border-b border-gray-200 ${
-        transaction.category.toLowerCase() === "income"
-          ? "bg-green-50" // Light green background for income
-          : "bg-red-50"   // Light red background for expense
-      }`}
-    >
-      {/* Name */}
-      <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-800 truncate">
+              {transactions.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className={`border-b border-gray-300 transition-all hover:shadow-md hover:bg-gray-50 ${transaction.category.toLowerCase() === "income" ? "bg-emerald-50" : "bg-orange-50"}`}
+                >
+ <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-800 truncate">
         {editing === transaction.id ? (
           <Input
             type="text"
@@ -321,17 +295,14 @@ const TransactionHistory: React.FC = () => {
           <Trash2Icon />
         </button>
       </td>
-    </tr>
-  ))}
-</tbody>
-
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>
     </div>
   );
-  
-  
 };
 
 export default TransactionHistory;
