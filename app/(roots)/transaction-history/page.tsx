@@ -207,121 +207,124 @@ const TransactionHistory: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction, index) => (
-                <tr
-                  key={transaction.id}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-b border-gray-200`}
-                >
-                  {/* Name */}
-                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-800 truncate">
-                    {editing === transaction.id ? (
-                      <Input
-                        type="text"
-                        value={editedTransaction.name || transaction.name}
-                        onChange={(e) =>
-                          setEditedTransaction({
-                            ...editedTransaction,
-                            name: e.target.value,
-                          })
-                        }
-                        className="border border-gray-300 rounded p-2 w-full"
-                      />
-                    ) : (
-                      transaction.name
-                    )}
-                  </td>
-  
-                  {/* Amount */}
-                  <td
-                    className={`px-4 sm:px-6 py-4 text-xs sm:text-sm ${
-                      transaction.category.toLowerCase() === "income"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {editing === transaction.id ? (
-                      <Input
-                        type="number"
-                        value={editedTransaction.amount || transaction.amount}
-                        onChange={(e) =>
-                          setEditedTransaction({
-                            ...editedTransaction,
-                            amount: +e.target.value,
-                          })
-                        }
-                        className="border border-gray-300 rounded p-2 w-full"
-                      />
-                    ) : transaction.category.toLowerCase() === "income" ? (
-                      `+ $${transaction.amount}`
-                    ) : (
-                      `- $${Math.abs(transaction.amount)}`
-                    )}
-                  </td>
-  
-                  {/* Date */}
-                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
-                    {editing === transaction.id ? (
-                      <Input
-                        type="text"
-                        value={editedTransaction.date || formatDate(transaction.date)}
-                        disabled
-                        className="border border-gray-300 rounded p-2 w-full"
-                      />
-                    ) : (
-                      transaction.date
-                    )}
-                  </td>
-  
-                  {/* Category */}
-                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
-                    {editing === transaction.id ? (
-                      <select
-                        value={editedTransaction.category || transaction.category}
-                        onChange={(e) =>
-                          setEditedTransaction({
-                            ...editedTransaction,
-                            category: e.target.value,
-                          })
-                        }
-                        className="border border-gray-300 rounded p-2 w-full"
-                      >
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                      </select>
-                    ) : (
-                      transaction.category
-                    )}
-                  </td>
-  
-                  {/* Actions */}
-                  <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm">
-                    {editing === transaction.id ? (
-                      <button
-                        onClick={saveEditedTransaction}
-                        className="text-green-600 hover:underline mr-4"
-                      >
-                        <SaveIcon />
-                      </button>
-                    ) : (
-                      <button
-                        className="text-blue-600 hover:underline mr-4"
-                        onClick={() => editTransaction(transaction.id)}
-                      >
-                        <PenBoxIcon />
-                      </button>
-                    )}
-                    <button
-                      className="text-red-600 hover:underline"
-                      onClick={() => deleteTransaction(transaction.id)}
-                    >
-                      <Trash2Icon />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {transactions.map((transaction, index) => (
+    <tr
+      key={transaction.id}
+      className={`border-b border-gray-200 ${
+        transaction.category.toLowerCase() === "income"
+          ? "bg-green-50" // Light green background for income
+          : "bg-red-50"   // Light red background for expense
+      }`}
+    >
+      {/* Name */}
+      <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-800 truncate">
+        {editing === transaction.id ? (
+          <Input
+            type="text"
+            value={editedTransaction.name || transaction.name}
+            onChange={(e) =>
+              setEditedTransaction({
+                ...editedTransaction,
+                name: e.target.value,
+              })
+            }
+            className="border border-gray-300 rounded p-2 w-full"
+          />
+        ) : (
+          transaction.name
+        )}
+      </td>
+
+      {/* Amount */}
+      <td
+        className={`px-4 sm:px-6 py-4 text-xs sm:text-sm ${
+          transaction.category.toLowerCase() === "income"
+            ? "text-green-600"
+            : "text-red-600"
+        }`}
+      >
+        {editing === transaction.id ? (
+          <Input
+            type="number"
+            value={editedTransaction.amount || transaction.amount}
+            onChange={(e) =>
+              setEditedTransaction({
+                ...editedTransaction,
+                amount: +e.target.value,
+              })
+            }
+            className="border border-gray-300 rounded p-2 w-full"
+          />
+        ) : transaction.category.toLowerCase() === "income" ? (
+          `+ $${transaction.amount}`
+        ) : (
+          `- $${Math.abs(transaction.amount)}`
+        )}
+      </td>
+
+      {/* Date */}
+      <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
+        {editing === transaction.id ? (
+          <Input
+            type="text"
+            value={editedTransaction.date || formatDate(transaction.date)}
+            disabled
+            className="border border-gray-300 rounded p-2 w-full"
+          />
+        ) : (
+          transaction.date
+        )}
+      </td>
+
+      {/* Category */}
+      <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
+        {editing === transaction.id ? (
+          <select
+            value={editedTransaction.category || transaction.category}
+            onChange={(e) =>
+              setEditedTransaction({
+                ...editedTransaction,
+                category: e.target.value,
+              })
+            }
+            className="border border-gray-300 rounded p-2 w-full"
+          >
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        ) : (
+          transaction.category
+        )}
+      </td>
+
+      {/* Actions */}
+      <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm">
+        {editing === transaction.id ? (
+          <button
+            onClick={saveEditedTransaction}
+            className="text-green-600 hover:underline mr-4"
+          >
+            <SaveIcon />
+          </button>
+        ) : (
+          <button
+            className="text-blue-600 hover:underline mr-4"
+            onClick={() => editTransaction(transaction.id)}
+          >
+            <PenBoxIcon />
+          </button>
+        )}
+        <button
+          className="text-red-600 hover:underline"
+          onClick={() => deleteTransaction(transaction.id)}
+        >
+          <Trash2Icon />
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       </div>
