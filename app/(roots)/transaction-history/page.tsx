@@ -174,7 +174,7 @@ const TransactionHistory: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse border-2 border-blue-50 rounded-lg shadow-lg transition-all hover:border-slate-50 hover:shadow-blue-300/50">
             <thead>
-              <tr className="bg-gray-100 border-b border-gray-300">
+              <tr className="bg-sky-50 border-b border-gray-300">
                 {["Name", "Amount", "Date", "Category", "Actions"].map((heading) => (
                   <th
                     key={heading}
