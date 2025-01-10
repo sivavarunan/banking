@@ -208,12 +208,10 @@ const TransactionHistory: React.FC = () => {
                       transaction.name
                     )}
                   </td>
-
-                  {/* Amount */}
                   <td
                     className={`px-4 sm:px-6 py-4 text-xs sm:text-sm ${transaction.category.toLowerCase() === "income"
-                        ? "text-green-600"
-                        : "text-red-600"
+                      ? "text-green-600"
+                      : "text-red-600"
                       }`}
                   >
                     {editing === transaction.id ? (
@@ -248,8 +246,6 @@ const TransactionHistory: React.FC = () => {
                       transaction.date
                     )}
                   </td>
-
-                  {/* Category */}
                   <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm text-gray-600">
                     {editing === transaction.id ? (
                       <select
@@ -269,8 +265,6 @@ const TransactionHistory: React.FC = () => {
                       transaction.category
                     )}
                   </td>
-
-                  {/* Actions */}
                   <td className="px-4 sm:px-6 py-4 text-xs sm:text-sm">
                     {editing === transaction.id ? (
                       <button
